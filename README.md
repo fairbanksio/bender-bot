@@ -13,12 +13,13 @@ A Python based Slack bot
 ## Setup
 - Setup pipenv: `pip install pipenv && pipenv shell`
 - Install dependencies: `pipenv install`
-- Launch with your Slack token: `SLACK_TOKEN='xoxb-xxxxxxxx' python3 index.py` 
+- Launch with your Slack token: `SLACK_BOT_TOKEN='xoxb-xxxxxxxx' python3 index.py` 
 
 ## Usage
 - WIP
 
 ## To Do
+- [ ] Slack Event Support
 - [ ] Docker Support
 - [ ] Integration with OpenAI APIs
 
