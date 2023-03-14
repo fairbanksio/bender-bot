@@ -40,6 +40,10 @@ async def message_hello(message, ack, say):
         text=f"Hey there <@{message['user']}>!",
     )
 
+@app.event("message")
+async def handle_message_events(body, ack, logger):
+    await ack()
+
 @app.action("button_click")
 async def action_button_click(body, ack, say):
     # Acknowledge the action
