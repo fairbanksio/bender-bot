@@ -19,6 +19,7 @@ A Python based Slack bot
 - WIP
 
 ## To Do
+- [ ] Slack Event Support
 - [ ] Docker Support
 - [ ] Integration with OpenAI APIs
 
