@@ -4,7 +4,8 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-slack-sdk = "*"
+slack-bolt = "*"
+aiohttp = "*"
 
 [dev-packages]
 
