@@ -6,7 +6,7 @@ A Python based Slack bot with OpenAI integration
 - Python 3.9+
 - [A Slack token](https://api.slack.com/apps)
 	- Create a new Slack app from scratch
-	- Add `chat:write` & `channel.history` permissions for the Bot user
+	- Add `chat:write`, `channel.history` and `app_mention` scopes for the Bot user
 	- Install the app to your workplace
 - An [OpenAI API key](https://platform.openai.com/account/api-keys)
 - ngrok installed for development: `sudo snap install ngrok`
