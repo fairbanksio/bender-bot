@@ -6,6 +6,7 @@ name = "pypi"
 [packages]
 slack-bolt = "*"
 aiohttp = "*"
+openai = "*"
 
 [dev-packages]
 
