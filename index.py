@@ -4,13 +4,16 @@ import openai
 import os
 from slack_bolt import App
 
-logging.basicConfig(level=logging.INFO)
-
-openai.api_key = os.getenv("OPENAI_API_KEY")
+# Setup Slack app
 app = App(
     token=os.environ.get("SLACK_BOT_TOKEN"),
     signing_secret=os.environ.get("SLACK_SIGNING_SECRET"),
 )
+
+# Setup OpenAI
+logging.basicConfig(level=logging.INFO)
+openai.api_key = os.getenv("OPENAI_API_KEY")
+#openai_model = os.getenv("OPENAI_MODEL")
 
 def chat_completion(user_msg):
     completion = openai.ChatCompletion.create(
@@ -25,7 +28,8 @@ def chat_completion(user_msg):
     )
     print(completion.usage)
     return str(completion.choices[0].message.content)
-    
+
+# Slack Handlers
 @app.middleware
 def log_request(logger, body, next):
     logger.info(body["event"]["text"]) # Log incoming message(s)
@@ -38,16 +42,16 @@ def event_test(body, ack, say, logger):
     say('```' + json.dumps(body) + '```')
 
 @app.event("app_mention")
-def message_bender(event, ack, say, logger):
+def message_bender(event, ack, say):
     ack()
     user_msg = event["text"]
     ai_resp = chat_completion(user_msg)
     say(ai_resp) # Convert to support Blocks?
 
-# Catch all handler
+# Catch all Slack Handler
 @app.event("message")
 def handle_message_events(ack):
-    ack()
+    ack() # All messages must be ack'd or events will replay
 
 if __name__ == "__main__":
     app.start(3000)
