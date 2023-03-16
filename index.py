@@ -80,7 +80,7 @@ def message_bender(event, ack, say):
                 "elements": [
                     {
                         "type": "plain_text",
-                        "text": "Usage: "
+                        "text": "Complexity: "
                         + str(ai_resp["usage"])
                         + " || Est. Cost: "
                         + str(ai_resp["cost"])
