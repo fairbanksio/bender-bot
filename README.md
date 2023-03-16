@@ -29,8 +29,10 @@ A Python based Slack bot with OpenAI integration
 - [x] Integrate with OpenAI APIs
 - [ ] Maintain conversation context
 - [ ] Support for emoji events
+- [ ] Better error handling
 
 ## Resources:
 - Slack Bolt for Python: https://github.com/slackapi/bolt-python
 - Slack API docs: https://pypi.org/project/slack-sdk
+- Slack Block Kit Builder: https://app.slack.com/block-kit-builder
 - OpenAI Chat Completion API: https://platform.openai.com/docs/api-reference/chat/create?lang=python

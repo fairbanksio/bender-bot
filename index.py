@@ -46,7 +46,17 @@ def message_bender(event, ack, say):
     ack()
     user_msg = event["text"]
     ai_resp = chat_completion(user_msg)
-    say(ai_resp) # Convert to support Blocks?
+    say({
+	    "blocks": [
+	        {
+			    "type": "section",
+			    "text": {
+				    "type": "mrkdwn",
+				    "text": ai_resp
+			    }
+		    }
+	    ]
+    }) # Convert to support Blocks?
 
 # Catch all Slack Handler
 @app.event("message")
