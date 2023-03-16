@@ -36,3 +36,4 @@ A Python based Slack bot with OpenAI integration
 - Slack API docs: https://pypi.org/project/slack-sdk
 - Slack Block Kit Builder: https://app.slack.com/block-kit-builder
 - OpenAI Chat Completion API: https://platform.openai.com/docs/api-reference/chat/create?lang=python
+- OpenAI Pricing: https://openai.com/pricing
