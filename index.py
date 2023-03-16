@@ -1,7 +1,10 @@
 import logging
 import openai
 import os
+from dotenv import load_dotenv
 from slack_bolt import App
+
+load_dotenv()
 
 logging.basicConfig(level=logging.INFO)
 
