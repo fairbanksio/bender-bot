@@ -23,6 +23,10 @@ A Python based Slack bot with OpenAI integration
 - On [Slack](https://api.slack.com/apps), provide the ngrok url as the endpoint under Event Subscriptions.
 - Invite the bot to a channel and send a sample message
 
+## Docker
+
+bender-bot is also available for deployment via Docker: `docker run -d -p 3000:3000 jonfairbanks/bender-bot`
+
 ## To Do
 - [x] Slack Event Support
 - [x] Docker Support
@@ -31,6 +35,7 @@ A Python based Slack bot with OpenAI integration
 - [ ] Support for emoji events 🔥
 - [ ] Prompt based image generation (Ex: Stable Diffusion)
 - [ ] Better error handling
+- [ ] Code Refactoring
 
 ## Resources:
 - Slack Bolt for Python: https://github.com/slackapi/bolt-python
