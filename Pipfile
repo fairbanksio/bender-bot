@@ -7,6 +7,8 @@ name = "pypi"
 slack-bolt = "*"
 aiohttp = "*"
 openai = "*"
+black = "*"
+python-dotenv = "*"
 
 [dev-packages]
 
