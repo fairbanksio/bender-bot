@@ -15,4 +15,6 @@ RUN pip install --user -r requirements.txt
 
 COPY --chown=worker:worker . .
 
+EXPOSE 3000
+
 CMD ["python", "index.py"]
