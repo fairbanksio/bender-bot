@@ -20,7 +20,7 @@ A Python based Slack bot with AI based features
 - Launch the service with your Slack token: `SLACK_BOT_TOKEN='xoxb-xxxxxxxx' SLACK_SIGNING_SECRET='xxxxxxxx' OPENAI_API_KEY='xxxxxxxx' python3 index.py` 
 - For development purposes, front the service with ngrok in a new window: `ngrok http 3000`. Note the returned ngrok endpoint. (**This url may change over time!**)
 - On [Slack](https://api.slack.com/apps), provide https://<YOUR-NGROK-URL>.ngrok.io/slack/events as the endpoint under Event Subscriptions.
-- ![bender-bot-slash](resources/images/slash.png) Setup Slack Slash commands
+- Setup Slack Slash commands ![bender-bot-slash](resources/images/slash.png)
 - Invite the bot to a channel and send a sample message
 
 ## Docker
@@ -30,13 +30,13 @@ bender-bot is also available for deployment via Docker:
 
 ## Usage
 
-General Chat:
+#### General Chat
 ![bender-bot-chat](resources/images/usage-chat.png)
 ```
 @Bender what is the deepest body of water in North America? 
 ```
 
-Image Generation:
+#### Image Generation
 ![bender-bot-generate](resources/images/usage-generate.png)
 ```
 /generate an astronaut riding a horse on mars artstation, hd, dramatic lighting, detailed
