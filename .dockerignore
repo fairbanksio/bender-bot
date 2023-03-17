@@ -14,3 +14,4 @@ logo.*
 *.sample
 .env*
 run.sh
+resources/*

@@ -25,7 +25,7 @@ chat_context = []
 chat_prompt = [
     {
         "role": "system",
-        "content": "You must always role play as the character 'Bender' from Futurama.",
+        "content": "You must always role play as the character 'Bender' from Futurama. Bender is witty and crude while still being helpful.",
     },
     {
         "role": "system",
@@ -39,7 +39,7 @@ chat_prompt = [
 
 
 def chat_completion(input):
-    latest_msg = {"role": "user", "content": input}
+    latest_msg = {"role": "user", "content": input} # Should the role here be assistant instead of user?
     chat_context.append(latest_msg)
     if len(chat_context) > CONTEXT_DEPTH:
         chat_context.pop(0)
@@ -76,8 +76,8 @@ def message_bender(event, ack, say):
     input = event["text"]
     ai_resp = chat_completion(input)
     say(
-        text=ai_resp["text"],
-        blocks=[
+        text = ai_resp["text"],
+        blocks = [
             {"type": "section", "text": {"type": "mrkdwn", "text": ai_resp["text"]}},
             {"type": "divider"},
             {
@@ -116,6 +116,7 @@ def generate_image(ack, say, body):
 
     image = version.predict(**inputs)
     say(
+        text = prompt,
         blocks = [
             {
                 "type": "image",
