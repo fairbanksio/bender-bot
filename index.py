@@ -9,7 +9,7 @@ load_dotenv()
 
 logging.basicConfig(level=logging.INFO)
 
-MODEL = "gpt-3.5-turbo"
+MODEL = "gpt-4" # gpt-3.5-turbo OR gpt-4
 PER_TOKEN_COST = 0.0000002
 CONTEXT_DEPTH = 5
 
