@@ -28,8 +28,10 @@ A Python based Slack bot with AI based features
 
 #### Docker
 
-bender-bot is also available for deployment via Docker: 
-`docker run -d -p 3000:3000 jonfairbanks/bender-bot`
+bender-bot is also available for deployment via Docker:
+```
+docker run -d -p 3000:3000 jonfairbanks/bender-bot
+```
 
 ## Usage
 
