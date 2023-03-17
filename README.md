@@ -31,16 +31,16 @@ bender-bot is also available for deployment via Docker:
 ## Usage
 
 #### General Chat
-![bender-bot-chat](resources/images/usage-chat.png)
 ```
 @Bender what is the deepest body of water in North America? 
 ```
+![bender-bot-chat](resources/images/usage-chat.png)
 
 #### Image Generation
-![bender-bot-generate](resources/images/usage-generate.png)
 ```
 /generate an astronaut riding a horse on mars artstation, hd, dramatic lighting, detailed
 ```
+![bender-bot-generate](resources/images/usage-generate.png)
 
 ## To Do
 - [x] Slack Event Support
