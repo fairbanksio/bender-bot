@@ -46,7 +46,6 @@ def chat_completion(input):
     request = chat_prompt + chat_context
 
     completion = openai.ChatCompletion.create(model=MODEL, messages=request)
-    # print('Total Cost: ' + str(completion.usage.total_tokens) + ' tokens') # Prints token complexity of the request
     resp = {
         "usage": completion.usage.total_tokens,
         "cost": f"{(completion.usage.total_tokens * PER_TOKEN_COST):.8f}",
@@ -58,13 +57,14 @@ def chat_completion(input):
 # Slack Handlers
 @app.middleware
 def log_events(logger, body, next):
+    # Should ack's be handled here instead of in a catch-all?
     try:
         logger.info(body["event"]["text"])  # Log incoming messages
     except Exception:
         logger.info(body["event"])  # Log incoming events
     return next()
 
-# Respond to @Bender
+# Respond to @Bender mentions
 @app.event("app_mention")
 def message_bender(event, ack, say):
     ack()
@@ -96,7 +96,7 @@ def message_bender(event, ack, say):
     )
 
 
-# Catch all Slack Handler
+# Catch all (should be last handler)
 @app.event("message")
 def handle_message_events(ack):
     ack()  # All messages must be ack'd or events will replay

@@ -1,0 +1,9 @@
+services:
+  bender-bot:
+    image: jonfairbanks/bender-bot
+    ports:
+      - "3000:3000"
+    environment:
+      - SLACK_BOT_TOKEN=xoxb-xxxxx
+      - SLACK_SIGNING_SECRET=xxxxx
+      - OPENAI_API_KEY=xxxxx
