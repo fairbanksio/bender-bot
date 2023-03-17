@@ -50,6 +50,8 @@ docker run -d -p 3000:3000 jonfairbanks/bender-bot
 ## To Do
 - [x] Slack Event Support
 - [x] Docker Support
+- [ ] Helm Support
+- [ ] Docker Build via Github Actions
 - [x] Integrate with OpenAI APIs
 - [x] Maintain conversation context
 - [ ] Support for emoji events 🔥
