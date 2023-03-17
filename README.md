@@ -1,14 +1,12 @@
 # bender-bot
 
-![bender-bot](resources/images/profile.png)
-
 A Python based Slack bot with AI based features
 
 ## Requirements
 - Python 3.9+
 - [A Slack token](https://api.slack.com/apps)
 	- Create a new Slack app from scratch
-	- ![bender-bot-scopes](resources/images/scopes.png) Add scopes for the Bot user
+	- Add scopes for the Bot user ![bender-bot-scopes](resources/images/scopes.png)
 	- Install the app into your Slack workspace
 - An [OpenAI API key](https://platform.openai.com/account/api-keys) for Chat capabilities
 - A [Replica API key](https://replicate.com/account) for Image related features
