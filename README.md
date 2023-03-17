@@ -1,13 +1,15 @@
 # bender-bot
 
-A Python based Slack bot with OpenAI integration
+![bender-bot](resources/images/profile.png)
+
+A Python based Slack bot with AI based features
 
 ## Requirements
 - Python 3.9+
 - [A Slack token](https://api.slack.com/apps)
 	- Create a new Slack app from scratch
-	- Add `chat:write`, `channel.history` and `app_mention` scopes for the Bot user
-	- Install the app to your workplace
+	- ![bender-bot-scopes](resources/images/scopes.png) Add scopes for the Bot user
+	- Install the app into your Slack workspace
 - An [OpenAI API key](https://platform.openai.com/account/api-keys) for Chat capabilities
 - A [Replica API key](https://replicate.com/account) for Image related features
 - ngrok installed for development: `sudo snap install ngrok`
@@ -19,7 +21,8 @@ A Python based Slack bot with OpenAI integration
 - Install dependencies: `pipenv install`
 - Launch the service with your Slack token: `SLACK_BOT_TOKEN='xoxb-xxxxxxxx' SLACK_SIGNING_SECRET='xxxxxxxx' OPENAI_API_KEY='xxxxxxxx' python3 index.py` 
 - For development purposes, front the service with ngrok in a new window: `ngrok http 3000`. Note the returned ngrok endpoint. (**This url may change over time!**)
-- On [Slack](https://api.slack.com/apps), provide https://<YOUR-NGROK-URL>.ngrok.io/slack/events as the endpoint under Event Subscriptions and Slash Commands.
+- On [Slack](https://api.slack.com/apps), provide https://<YOUR-NGROK-URL>.ngrok.io/slack/events as the endpoint under Event Subscriptions.
+- ![bender-bot-slash](resources/images/slash.png) Setup Slack Slash commands
 - Invite the bot to a channel and send a sample message
 
 ## Docker
@@ -30,11 +33,13 @@ bender-bot is also available for deployment via Docker:
 ## Usage
 
 General Chat:
+![bender-bot-chat](resources/images/usage-chat.png)
 ```
 @Bender what is the deepest body of water in North America? 
 ```
 
 Image Generation:
+![bender-bot-generate](resources/images/usage-generate.png)
 ```
 /generate an astronaut riding a horse on mars artstation, hd, dramatic lighting, detailed
 ```
@@ -49,6 +54,7 @@ Image Generation:
 - [ ] Improve Context via Chat History
 - [ ] Better error handling
 - [ ] Code Refactoring
+- [ ] Helm Support
 
 ## Resources:
 - Slack Bolt for Python: https://github.com/slackapi/bolt-python
