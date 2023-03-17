@@ -27,7 +27,7 @@ A Python based Slack bot with OpenAI integration
 - [x] Slack Event Support
 - [x] Docker Support
 - [x] Integrate with OpenAI APIs
-- [ ] Maintain conversation context
+- [x] Maintain conversation context
 - [ ] Support for emoji events
 - [ ] Better error handling
 

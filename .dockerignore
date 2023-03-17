@@ -1,4 +1,16 @@
+.git
+.gitignore
+.gitattributes
+.cache
 *.md
-.git*
+*.example
+LICENSE
+logo.*
 *.png
+*.gif
+*.jpg
+*.bmpr
+*.svg
 *.sample
+.env*
+run.sh

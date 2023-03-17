@@ -64,7 +64,7 @@ def log_events(logger, body, next):
         logger.info(body["event"])  # Log incoming events
     return next()
 
-
+# Respond to @Bender
 @app.event("app_mention")
 def message_bender(event, ack, say):
     ack()
