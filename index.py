@@ -131,6 +131,11 @@ def generate_image(ack, say, body):
 	    ]
     )
 
+# Respond to emoji events
+@app.event("reaction_added")
+def say_something_to_reaction(say):
+    say("OK!")
+
 # Catch all (should be last handler)
 @app.event("message")
 def handle_message_events(ack):
