@@ -57,7 +57,7 @@ docker run -d -p 3000:3000 jonfairbanks/bender-bot
 - [ ] Support Private Channels & Messages
 - [ ] Support for emoji events 🔥
 - [x] Prompt based image generation (Stable Diffusion)
-- [ ] Improve Context via Chat History
+- [x] Improve Context via Chat History
 - [ ] Better error handling
 - [ ] Code Refactoring
 - [ ] Helm Support
