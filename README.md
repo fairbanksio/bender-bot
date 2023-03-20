@@ -2,6 +2,9 @@
 
 A Python based Slack bot with AI based features
 
+- Chat Completion via ChatGPT
+- Image Generation via Stable Diffusion
+
 ## Requirements
 - Python 3.9+
 - [A Slack token](https://api.slack.com/apps)
@@ -33,6 +36,12 @@ bender-bot is also available for deployment via Docker:
 docker run -d -p 3000:3000 jonfairbanks/bender-bot
 ```
 
+#### Options
+
+Options can be overridden or enable using the following env variables:
+
+- **DEBUG**: Enables additional logging of events, requests, responses and chat context
+
 ## Usage
 
 #### General Chat
@@ -55,10 +64,11 @@ docker run -d -p 3000:3000 jonfairbanks/bender-bot
 - [x] Integrate with OpenAI APIs
 - [x] Maintain conversation context
 - [ ] Support Private Channels & Messages
+- [ ] Support File Uploads
 - [ ] Support for emoji events 🔥
 - [x] Prompt based image generation (Stable Diffusion)
 - [x] Improve Context via Chat History
-- [ ] Better error handling
+- [x] Better error handling
 - [ ] Code Refactoring
 - [ ] Helm Support
 
