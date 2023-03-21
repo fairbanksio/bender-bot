@@ -48,7 +48,7 @@ jobs:
 
   docker-build:
     name: Docker Build
-    needs: [vuln-report]
+    #needs: [vuln-report]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
