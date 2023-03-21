@@ -14,6 +14,7 @@ load_dotenv()
 MODEL = "gpt-4" # gpt-3.5-turbo OR gpt-4
 PER_TOKEN_COST = 0.0000002
 CONTEXT_DEPTH = 5
+CONTEXT_DEPTH = 10
 PATTERN = "<@[a-zA-Z0-9]+>"
 CHAT_CONTEXT = []
 
