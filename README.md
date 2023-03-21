@@ -2,6 +2,9 @@
 
 A Python based Slack bot with AI based features
 
+- Chat Completion via ChatGPT
+- Image Generation via Stable Diffusion
+
 ## Requirements
 - Python 3.9+
 - [A Slack token](https://api.slack.com/apps)
@@ -22,7 +25,7 @@ A Python based Slack bot with AI based features
 - Install dependencies: `pipenv install`
 - Launch the service with your Slack token: `SLACK_BOT_TOKEN='xoxb-xxxxx' SLACK_SIGNING_SECRET='xxxxx' OPENAI_API_KEY='xxxxx' REPLICATE_API_TOKEN='xxxxx' python3 index.py` 
 - For development purposes, front the service with ngrok in a new window: `ngrok http 3000`. Note the returned ngrok endpoint. (**This url may change over time!**)
-- On [Slack](https://api.slack.com/apps), provide https://<YOUR-NGROK-URL>.ngrok.io/slack/events as the endpoint under Event Subscriptions.
+- On [Slack](https://api.slack.com/apps), provide https://YOUR-NGROK-URL.ngrok.io/slack/events as the endpoint under Event Subscriptions.
 - Setup Slack slash commands -- ![bender-bot-slash](resources/images/slash.png)
 - Invite the bot to a channel and send a sample message
 
@@ -32,6 +35,16 @@ bender-bot is also available for deployment via Docker:
 ```
 docker run -d -p 3000:3000 jonfairbanks/bender-bot
 ```
+
+#### Options
+
+Options can be overridden or enable using the following env variables:
+
+- **DEBUG**: Enables additional logging of events, requests, responses and chat context
+- **SLACK_BOT_TOKEN**: Required; used to authenticate with Slack APIs
+- **SLACK_SIGNING_SECRET**: Required; used to authenticate with Slack APIs
+- **OPENAI_API_KEY**: Required; used to authenticate with OpenAI Chat Completion API
+- **REPLICATE_API_TOKEN**: Required; used to authenticate with Replicate platform
 
 ## Usage
 
@@ -50,17 +63,18 @@ docker run -d -p 3000:3000 jonfairbanks/bender-bot
 ## To Do
 - [x] Slack Event Support
 - [x] Docker Support
-- [ ] Helm Support
 - [ ] Docker Build via Github Actions
+- [ ] Helm Support
 - [x] Integrate with OpenAI APIs
 - [x] Maintain conversation context
+- [ ] Channel based context
 - [ ] Support Private Channels & Messages
+- [ ] Support File Uploads
 - [ ] Support for emoji events 🔥
 - [x] Prompt based image generation (Stable Diffusion)
 - [x] Improve Context via Chat History
-- [ ] Better error handling
+- [x] Better error handling
 - [ ] Code Refactoring
-- [ ] Helm Support
 
 ## Resources:
 
