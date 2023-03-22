@@ -106,7 +106,7 @@ jobs:
 
       - name: Bump version and push tag
         id: bump-tag
-        uses: anothrNick/github-tag-action@1.36.0
+        uses: anothrNick/github-tag-action@1.55.0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           RELEASE_BRANCHES: "master,main"
@@ -128,7 +128,7 @@ jobs:
           if [[ $CUR_BRANCH = "main" || $CUR_BRANCH = "master" ]]; then
               TAGS="${{ github.repository }}:${{ steps.bump-tag.outputs.new_tag }},${{ github.repository }}:latest"
           else
-              TAGS="${{ github.repository }}:${{ steps.bump-tag.outputs.new_tag }}"
+              TAGS="${{ github.repository }}:${{ steps.bump-tag.outputs.new_tag }},${{ github.repository }}:develop"
           fi
           echo "::set-output name=tags::${TAGS}"
 
