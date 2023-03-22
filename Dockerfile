@@ -1,5 +1,6 @@
-FROM python:3.9-slim as base
+FROM python:3.10-alpine as base
 
+RUN apk update && apk add python3-dev gcc libc-dev
 RUN pip install --upgrade pip
 
 RUN adduser -D worker
