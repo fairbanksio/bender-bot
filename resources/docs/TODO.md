@@ -1,7 +1,7 @@
 ## To Do
 - [x] Slack Event Support
 - [x] Docker Support
-- [ ] Docker Build via Github Actions
+- [x] Docker Build via Github Actions
 - [ ] Helm Support
 - [x] Integrate with OpenAI APIs
 - [x] Maintain conversation context
