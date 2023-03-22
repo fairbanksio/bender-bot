@@ -3,8 +3,9 @@ import logging
 import openai
 import os
 import re
-import replicate
 import sys
+
+from images import generate_image
 
 from dotenv import load_dotenv
 from slack_bolt import App
@@ -73,11 +74,6 @@ def chat_completion():
 
     return resp
 
-
-# Setup Replicate (Image Generation)
-model = replicate.models.get("stability-ai/stable-diffusion")
-version = model.versions.get("db21e45d3f7023abc2a46ee38a23973f6dce16bb082a930b0c49861f96d1e5bf")
-
 # Slack Handlers
 @app.middleware
 def log_events(logger, body, next, ack):
@@ -142,18 +138,9 @@ def say_something_to_reaction(say):
 
 # Respond to /generate commands
 @app.command("/generate")
-def generate_image(say, body):
+def generate(say, body):
     prompt = body["text"]
-    inputs = {
-        'prompt': prompt,
-        'image_dimensions': "768x768",
-        'num_outputs': 1,
-        'num_inference_steps': 50,
-        'guidance_scale': 7.5,
-        'scheduler': "DPMSolverMultistep"
-    }
-
-    image = version.predict(**inputs)
+    image = generate_image(prompt)
     say(
         text = prompt,
         blocks = [
@@ -164,7 +151,7 @@ def generate_image(say, body):
                     "text": prompt,
                     "emoji": True
                 },
-                "image_url": image[0],
+                "image_url": image,
                 "alt_text": prompt
             }
 	    ]
