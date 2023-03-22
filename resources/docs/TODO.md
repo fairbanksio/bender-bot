@@ -12,5 +12,5 @@
 - [x] Prompt based image generation (Stable Diffusion)
 - [x] Improve Context via Chat History
 - [x] Better error handling
-- [ ] Code Refactoring
+- [x] Code Refactoring
 - [ ] Fix Logging
