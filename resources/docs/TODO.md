@@ -1,7 +1,7 @@
 ## To Do
 - [x] Slack Event Support
 - [x] Docker Support
-- [ ] Docker Build via Github Actions
+- [x] Docker Build via Github Actions
 - [ ] Helm Support
 - [x] Integrate with OpenAI APIs
 - [x] Maintain conversation context
@@ -12,5 +12,5 @@
 - [x] Prompt based image generation (Stable Diffusion)
 - [x] Improve Context via Chat History
 - [x] Better error handling
-- [ ] Code Refactoring
+- [x] Code Refactoring
 - [ ] Fix Logging
