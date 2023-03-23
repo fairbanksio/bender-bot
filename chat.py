@@ -21,6 +21,15 @@ chat_prompt = [
 ]
     
 def chat_completion():
+    """
+    Sends a chat prompt to OpenAI's Chat API to generate a response.
+
+    Args:
+        context: A list of chat messages sent between the user and assistant.
+
+    Returns:
+        A dictionary containing the response text, cost of tokens used, and other metadata.
+    """
     request = chat_prompt + context.CHAT_CONTEXT
     
     # Log the complete context being sent to OpenAI
