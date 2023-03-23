@@ -13,4 +13,4 @@
 - [x] Improve Context via Chat History
 - [x] Better error handling
 - [x] Code Refactoring
-- [ ] Fix Logging
+- [x] Fix Logging
