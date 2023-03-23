@@ -30,6 +30,5 @@ def handle_events(body, pattern="<@[a-zA-Z0-9]+>"):
             CHAT_CONTEXT.pop(0)
     except Exception:
         # Log the incoming event
-        event = body["event"]
-        logger.debug(f"Incoming event: {event}")
+        logger.debug(f"Incoming event: {body['event']}")
     return
