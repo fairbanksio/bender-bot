@@ -36,19 +36,18 @@ jobs:
   #       with:
   #         sarif_file: 'trivy-results.sarif'
   
-  # helm-lint:
-  #   name: Lint Helm chart
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - name: Checkout
-  #       uses: actions/checkout@v2
+  helm-lint:
+    name: Lint Helm chart
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
 
-  #     - name: Lint Helm chart
-  #       run: helm lint ./chart
+      - name: Lint Helm chart
+        run: helm lint ./chart
 
   release:
     name: "Release"
-    # needs: [docker-build]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout source code
@@ -66,11 +65,11 @@ jobs:
           DEFAULT_BUMP: "patch"
           INITIAL_VERSION: "1.0.0"
 
-      # - name: Update version in version files
-      #   id: update-version
-      #   run: |
-      #     # Update Helm chart version
-      #     sed -r -i "s/(version:[^*]|appVersion:[^*])([[:alnum:].]*.*)/\1${{ steps.bump-tag.outputs.new_tag }}/g" ./chart/Chart.yaml
+      - name: Update version in version files
+        id: update-version
+        run: |
+          # Update Helm chart version
+          sed -r -i "s/(version:[^*]|appVersion:[^*])([[:alnum:].]*.*)/\1${{ steps.bump-tag.outputs.new_tag }}/g" ./chart/Chart.yaml
 
       - name: Build Docker Tags
         id: docker-tags
@@ -118,22 +117,22 @@ jobs:
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,dest=/tmp/.buildx-cache
 
-      # - name: Package and publish Helm Chart
-      #   id: publish-helm
-      #   run: |
-      #     # Setup auth and workspace
-      #     CLONE_DIR=$(mktemp -d)
-      #     git config --global user.email "fairplay89@gmail.com"
-      #     git config --global user.name "jonfairbanks"
-      #     git clone "https://${{ secrets.HELM_CHARTS_PAT }}@github.com/jonfairbanks/helm-charts.git" "$CLONE_DIR"
+      - name: Package and publish Helm Chart
+        id: publish-helm
+        run: |
+          # Setup auth and workspace
+          CLONE_DIR=$(mktemp -d)
+          git config --global user.email "fairplay89@gmail.com"
+          git config --global user.name "jonfairbanks"
+          git clone "https://${{ secrets.HELM_CHARTS_PAT }}@github.com/jonfairbanks/helm-charts.git" "$CLONE_DIR"
           
-      #     # Package chart and push commit
-      #     helm package ./chart
-      #     cp *.tgz "$CLONE_DIR/_releases/"
-      #     cd "$CLONE_DIR"
-      #     git add .
-      #     git commit --message "Update from https://github.com/$GITHUB_REPOSITORY/commit/$GITHUB_SHA"
-      #     git push -u origin master
+          # Package chart and push commit
+          helm package ./chart
+          cp *.tgz "$CLONE_DIR/_releases/"
+          cd "$CLONE_DIR"
+          git add .
+          git commit --message "Update from https://github.com/$GITHUB_REPOSITORY/commit/$GITHUB_SHA"
+          git push -u origin master
 
       - name: Notify Slack
         uses: act10ns/slack@v1
