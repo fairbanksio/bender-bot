@@ -2,10 +2,10 @@
 - [x] Slack Event Support
 - [x] Docker Support
 - [x] Docker Build via Github Actions
-- [ ] Helm Support
+- [x] Helm Support
 - [x] Integrate with OpenAI APIs
 - [x] Maintain conversation context
-- [ ] Channel based context
+- [x] Channel based context
 - [ ] Support Private Channels & Messages
 - [ ] Support File Uploads
 - [ ] Support for emoji events 🔥
