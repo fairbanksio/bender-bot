@@ -1,3 +1,4 @@
+import os
 import re
 
 from log_config import logger
@@ -6,7 +7,7 @@ global CHAT_CONTEXT
 global CHAT_DEPTH
 
 CHAT_CONTEXT = {}
-CONTEXT_DEPTH = 25
+CONTEXT_DEPTH = os.environ.get("CONTEXT_DEPTH", 25)
 
 def handle_events(body):
     """
