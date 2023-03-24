@@ -10,11 +10,11 @@ WORKDIR /home/worker
 ENV PATH="/home/worker/.local/bin:${PATH}"
 RUN pip install --user pipenv
 
-COPY --chown=worker:worker Pipfile Pipfile
+COPY --chown=worker:worker ./src/Pipfile Pipfile
 RUN pipenv lock && pipenv requirements > requirements.txt
 RUN pip install --user -r requirements.txt
 
-COPY --chown=worker:worker . .
+COPY --chown=worker:worker ./src .
 
 EXPOSE 3000
 
