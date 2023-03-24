@@ -6,7 +6,7 @@ global CHAT_CONTEXT
 global CHAT_DEPTH
 
 CHAT_CONTEXT = {}
-CONTEXT_DEPTH = 10
+CONTEXT_DEPTH = 25
 
 def handle_events(body):
     """
