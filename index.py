@@ -1,4 +1,3 @@
-import logging
 import os
 import sys
 
@@ -6,13 +5,12 @@ import context
 
 from images import generate_image
 from chat import chat_completion
+from log_config import logger
 
 from dotenv import load_dotenv
 from slack_bolt import App
 
 load_dotenv()
-
-logging.basicConfig(level=logging.INFO)
 
 # Setup Slack app
 app = App(
@@ -24,7 +22,10 @@ app = App(
 @app.middleware
 def middleware(ack, body, next):
     ack()
-    context.handle_events(body)
+    try:
+        context.handle_events(body)
+    except Exception as e:
+        logger.error(e)
     return next()
 
 # Respond to @BOT mentions
@@ -59,15 +60,11 @@ def message_bender(say):
         ],
     )
 
-# [BROKEN] Respond to emoji events
-@app.event("reaction_added")
-def say_something_to_reaction(say):
-    say("OK!")
-
 # Respond to /generate commands
 @app.command("/generate")
 def generate(say, body):
     prompt = body["text"]
+    logger.debug(f"Generate Image prompt: {prompt}")
     image = generate_image(prompt)
     say(
         text = prompt,
@@ -85,11 +82,6 @@ def generate(say, body):
 	    ]
     )
 
-# Respond to /prompt commands
-@app.command("/prompt")
-def generate_prompt_text(body, logger):
-    logger.info(body)
-
 # Respond to /reset commands
 @app.command("/reset")
 def reset_context(say):
@@ -103,9 +95,9 @@ def handle_message_events():
 
 if __name__ == "__main__":
     try:
-        app.start(3000)
+        with app.start(3000):
+            pass
     except KeyboardInterrupt:
-        try:
-            sys.exit(130)
-        except SystemExit:
-            os._exit(130)
+        sys.exit(130)
+    except Exception:
+        sys.exit(1)
