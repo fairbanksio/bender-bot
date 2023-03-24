@@ -20,7 +20,7 @@ chat_prompt = [
     },
 ]
     
-def chat_completion():
+def chat_completion(channel_id):
     """
     Sends a chat prompt to OpenAI's Chat API to generate a response.
 
@@ -30,10 +30,10 @@ def chat_completion():
     Returns:
         A dictionary containing the response text, cost of tokens used, and other metadata.
     """
-    request = chat_prompt + context.CHAT_CONTEXT
+    request = chat_prompt + context.CHAT_CONTEXT[channel_id]
     
     # Log the complete context being sent to OpenAI
-    logger.debug(f"Context: {request}")
+    logger.debug(f"Chat Context: {request}")
 
     try:
         completion = openai.ChatCompletion.create(model=MODEL, messages=request)
@@ -46,11 +46,11 @@ def chat_completion():
         }
 
         # Add the returned response to CHAT_CONTEXT
-        context.CHAT_CONTEXT.append({"role": "assistant", "content": resp["text"]})
+        context.CHAT_CONTEXT[channel_id].append({"role": "assistant", "content": resp["text"]})
 
         # Trim CHAT_CONTEXT if necessary
-        if len(context.CHAT_CONTEXT) > context.CONTEXT_DEPTH:
-            context.CHAT_CONTEXT.pop(0)
+        if len(context.CHAT_CONTEXT[channel_id]) > context.CONTEXT_DEPTH:
+            context.CHAT_CONTEXT[channel_id].pop(0)
     except openai.error.APIError as e:
         logger.error(f"Error during chat completion: {e}")
         resp = {

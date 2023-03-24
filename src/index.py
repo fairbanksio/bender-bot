@@ -30,9 +30,10 @@ def middleware(ack, body, next):
 
 # Respond to @BOT mentions
 @app.event("app_mention")
-def message_bender(say):
+def message_bender(body, say):
     # Make a call to OpenAI
-    ai_resp = chat_completion()
+    channel_id = body['event']['channel']
+    ai_resp = chat_completion(channel_id)
 
     # Respond to the user
     say(
@@ -50,7 +51,7 @@ def message_bender(say):
                         + " || Est. Cost: "
                         + str(ai_resp["cost"])
                         + "¢ || Context Depth: "
-                        + str(len(context.CHAT_CONTEXT))
+                        + str(len(context.CHAT_CONTEXT[channel_id]))
                         + " || Model: "
                         + str(ai_resp["model"]),
                         "emoji": True,
@@ -84,8 +85,9 @@ def generate(say, body):
 
 # Respond to /reset commands
 @app.command("/reset")
-def reset_context(say):
-    context.CHAT_CONTEXT.clear()
+def reset_context(body, say):
+    channel_id = body['event']['channel']
+    context.CHAT_CONTEXT[channel_id].clear()
     say("Done :white_check_mark:") # Should probably be a private message
 
 # Catch all (should be last handler)
