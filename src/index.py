@@ -9,6 +9,7 @@ from log_config import logger
 
 from dotenv import load_dotenv
 from slack_bolt import App
+from slack_bolt.adapter.socket_mode import SocketModeHandler
 
 load_dotenv()
 
@@ -17,6 +18,7 @@ app = App(
     token=os.environ.get("SLACK_BOT_TOKEN"),
     signing_secret=os.environ.get("SLACK_SIGNING_SECRET"),
 )
+
 
 # Slack Handlers
 @app.middleware
@@ -28,17 +30,18 @@ def middleware(ack, body, next):
         logger.error(e)
     return next()
 
+
 # Respond to @BOT mentions
 @app.event("app_mention")
 def message_bender(body, say):
     # Make a call to OpenAI
-    channel_id = body['event']['channel']
+    channel_id = body["event"]["channel"]
     ai_resp = chat_completion(channel_id)
 
     # Respond to the user
     say(
-        text = ai_resp["text"],
-        blocks = [
+        text=ai_resp["text"],
+        blocks=[
             {"type": "section", "text": {"type": "mrkdwn", "text": ai_resp["text"]}},
             {"type": "divider"},
             {
@@ -61,6 +64,7 @@ def message_bender(body, say):
         ],
     )
 
+
 # Respond to /generate commands
 @app.command("/generate")
 def generate(say, body):
@@ -68,36 +72,35 @@ def generate(say, body):
     logger.debug(f"Generate Image prompt: {prompt}")
     image = generate_image(prompt)
     say(
-        text = prompt,
-        blocks = [
+        text=prompt,
+        blocks=[
             {
                 "type": "image",
-                "title": {
-                    "type": "plain_text",
-                    "text": prompt,
-                    "emoji": True
-                },
+                "title": {"type": "plain_text", "text": prompt, "emoji": True},
                 "image_url": image,
-                "alt_text": prompt
+                "alt_text": prompt,
             }
-	    ]
+        ],
     )
+
 
 # Respond to /reset commands
 @app.command("/reset")
 def reset_context(body, say):
-    channel_id = body['event']['channel']
+    channel_id = body["event"]["channel"]
     context.CHAT_CONTEXT[channel_id].clear()
-    say("Done :white_check_mark:") # Should probably be a private message
+    say("Done :white_check_mark:")  # Should probably be a private message
+
 
 # Catch all (should be last handler)
 @app.event("message")
 def handle_message_events():
     pass
 
+
 if __name__ == "__main__":
     try:
-        with app.start(3000):
+        with SocketModeHandler(app, os.environ["SLACK_APP_TOKEN"]).start():
             pass
     except KeyboardInterrupt:
         sys.exit(130)

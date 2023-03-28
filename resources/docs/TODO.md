@@ -9,7 +9,7 @@
 - [ ] Support Private Channels & Messages
 - [ ] Support File Uploads
 - [ ] Support for emoji events 🔥
-- [ ] Investigate Slack-Bolt Socket Mode
+- [x] Investigate Slack-Bolt Socket Mode
 - [x] Prompt based image generation (Stable Diffusion)
 - [x] Improve Context via Chat History
 - [x] Better error handling
