@@ -9,6 +9,7 @@ global CHAT_DEPTH
 CHAT_CONTEXT = {}
 CONTEXT_DEPTH = os.environ.get("CONTEXT_DEPTH", 25)
 
+
 def handle_events(body):
     """
     Remove bot mentions from incoming message, add message to chat context if it's not already there,
@@ -17,12 +18,12 @@ def handle_events(body):
     try:
         # Log the incoming message
         message_text = body["event"]["text"]
-        channel_id = body['event']['channel']
+        channel_id = body["event"]["channel"]
         logger.debug(f"Incoming message: [{channel_id}] {message_text}")
-        
+
         # Remove any @BOT mentions from the text
-        if(re.search("<@[a-zA-Z0-9]+>", message_text)):
-            message_text = re.sub("<@[a-zA-Z0-9]+>", '', message_text).lstrip()
+        if re.search("<@[a-zA-Z0-9]+>", message_text):
+            message_text = re.sub("<@[a-zA-Z0-9]+>", "", message_text).lstrip()
 
         # Initialize channel chat context if it does not exist
         if channel_id not in CHAT_CONTEXT:
