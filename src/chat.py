@@ -34,10 +34,12 @@ def chat_completion(channel_id):
     request = chat_prompt + context.CHAT_CONTEXT[channel_id]
 
     # Log the complete context being sent to OpenAI
-    logger.debug(f"Chat Context: {request}")
+    logger.debug(f"Chat Context: {request}\n")
 
     try:
+        logger.debug(f"Calling OpenAI: {request}\n")
         completion = openai.ChatCompletion.create(model=MODEL, messages=request)
+        logger.debug(f"OpenAI Response: {completion}\n")
 
         resp = {
             "usage": completion.usage.total_tokens,
@@ -55,7 +57,7 @@ def chat_completion(channel_id):
         if len(context.CHAT_CONTEXT[channel_id]) > context.CONTEXT_DEPTH:
             context.CHAT_CONTEXT[channel_id].pop(0)
     except openai.error.APIError as e:
-        logger.error(f"Error during chat completion: {e}")
+        logger.error(f"Error during chat completion: {e}\n")
         resp = {
             "usage": "n/a",
             "cost": "n/a",

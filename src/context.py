@@ -19,7 +19,7 @@ def handle_events(body):
         # Log the incoming message
         message_text = body["event"]["text"]
         channel_id = body["event"]["channel"]
-        logger.debug(f"Incoming message: [{channel_id}] {message_text}")
+        logger.debug(f"Incoming message: [{channel_id}] {message_text}\n")
 
         # Remove any @BOT mentions from the text
         if re.search("<@[a-zA-Z0-9]+>", message_text):
@@ -38,5 +38,5 @@ def handle_events(body):
             CHAT_CONTEXT[channel_id].pop(0)
     except Exception:
         # Log the incoming event
-        logger.debug(f"Incoming event: {body['event']}")
+        logger.debug(f"Incoming event: {body['event']}\n")
     return
