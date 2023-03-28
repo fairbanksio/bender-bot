@@ -1,5 +1,6 @@
 import os
 import sys
+import time
 
 import context
 
@@ -36,7 +37,10 @@ def middleware(ack, body, next):
 def message_bender(body, say):
     # Make a call to OpenAI
     channel_id = body["event"]["channel"]
+    start_time = time.time()
     ai_resp = chat_completion(channel_id)
+    end_time = time.time()
+    elapsed_time = f"{(end_time - start_time):.2f}"
 
     # Respond to the user
     say(
@@ -56,7 +60,9 @@ def message_bender(body, say):
                         + "¢ || Context Depth: "
                         + str(len(context.CHAT_CONTEXT[channel_id]))
                         + " || Model: "
-                        + str(ai_resp["model"]),
+                        + str(ai_resp["model"])
+                        + " || Response Time: "
+                        + str(elapsed_time) + "s",
                         "emoji": True,
                     }
                 ],
