@@ -62,7 +62,8 @@ def message_bender(body, say):
                         + " || Model: "
                         + str(ai_resp["model"])
                         + " || Response Time: "
-                        + str(elapsed_time) + "s",
+                        + str(elapsed_time)
+                        + "s",
                         "emoji": True,
                     }
                 ],
