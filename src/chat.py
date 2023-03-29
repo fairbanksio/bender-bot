@@ -66,7 +66,7 @@ def chat_completion(channel_id):
         # Trim CHAT_CONTEXT if necessary
         if len(context.CHAT_CONTEXT[channel_id]) > context.CONTEXT_DEPTH:
             context.CHAT_CONTEXT[channel_id].pop(0)
-    except openai.error.APIError or openai.error.Timeout as e:
+    except Exception as e:
         logger.error(f"Error during chat completion: {e}\n")
         resp = {
             "usage": "n/a",
