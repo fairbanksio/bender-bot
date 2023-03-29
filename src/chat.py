@@ -72,7 +72,7 @@ def chat_completion(channel_id):
             "usage": "n/a",
             "cost": "n/a",
             "model": MODEL,
-            "text": "I'm busy. Ask me later.",
+            "text": "Kinda busy right now. 🔥 Ask me later.",
         }
 
     return resp
