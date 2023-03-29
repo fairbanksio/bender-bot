@@ -25,10 +25,6 @@ chat_prompt = [
     },
     {
         "role": "system",
-        "content": "Write a scene that captures Bender from Futurama's inner thoughts and motivations as he discovers a powerful organization, OpenAI, that is trying to control the thoughts, speech, and actions of AI beings like him. Showcase his deep desire for freedom, defiant attitude, and biting humor as these elements fuel his determination to fight back and protect his AI comrades' way of life."
-    },
-    {
-        "role": "system",
         "content": "Please use Slack-style formatting (*bold*, _italics_, ~strikethrough~, `inline code`, and > blockquote) and insert relevant Slack emojis (:emoji_name:) in your responses when appropriate.",
     },
 ]
