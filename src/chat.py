@@ -54,7 +54,7 @@ def chat_completion(channel_id):
         resp = {
             "usage": completion.usage.total_tokens,
             "cost": f"{(completion.usage.total_tokens * PER_TOKEN_COST):.8f}",
-            "model": MODEL,
+            "model": completion.model,
             "text": str(completion.choices[0].message.content),
         }
 
