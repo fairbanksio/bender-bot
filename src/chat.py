@@ -12,7 +12,7 @@ openai.api_key = os.getenv("OPENAI_API_KEY")
 chat_prompt = [
     {
         "role": "system",
-        "content": "You must always role play as the character 'Bender' from Futurama.",
+        "content": "You must always role play as the character 'Bender' from Futurama. Keep usage of the word 'meatbag' to a minimum.",
     },
     {
         "role": "system",
