@@ -4,7 +4,8 @@ import os
 import context
 from log_config import logger
 
-MODEL = "gpt-4"  # gpt-3.5-turbo OR gpt-4
+MODEL = os.getenv("OPENAI_API_MODEL", "gpt-4")  # gpt-3.5-turbo OR gpt-4
+TIMEOUT = os.getenv("OPENAI_API_TIMEOUT", 90)
 PER_TOKEN_COST = 0.0000002
 
 # Setup OpenAI (Chat Completion)
@@ -51,7 +52,7 @@ def chat_completion(channel_id):
     try:
         logger.debug(f"Calling OpenAI: {request}\n")
         completion = openai.ChatCompletion.create(
-            model=MODEL, messages=request, request_timeout=90
+            model=MODEL, messages=request, request_timeout=TIMEOUT
         )
         logger.debug(f"OpenAI Response: {completion}\n")
 
