@@ -39,7 +39,7 @@ def chat_completion(channel_id):
     try:
         logger.debug(f"Calling OpenAI: {request}\n")
         completion = openai.ChatCompletion.create(
-            model=MODEL, messages=request, request_timeout=30
+            model=MODEL, messages=request, request_timeout=60
         )
         logger.debug(f"OpenAI Response: {completion}\n")
 
@@ -58,7 +58,7 @@ def chat_completion(channel_id):
         # Trim CHAT_CONTEXT if necessary
         if len(context.CHAT_CONTEXT[channel_id]) > context.CONTEXT_DEPTH:
             context.CHAT_CONTEXT[channel_id].pop(0)
-    except openai.error.APIError or openai.error.RequestTimeout as e:
+    except openai.error.APIError or openai.error.Timeout as e:
         logger.error(f"Error during chat completion: {e}\n")
         resp = {
             "usage": "n/a",
