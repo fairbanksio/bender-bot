@@ -51,7 +51,7 @@ def chat_completion(channel_id):
     try:
         logger.debug(f"Calling OpenAI: {request}\n")
         completion = openai.ChatCompletion.create(
-            model=MODEL, messages=request, request_timeout=60
+            model=MODEL, messages=request, request_timeout=90
         )
         logger.debug(f"OpenAI Response: {completion}\n")
 
