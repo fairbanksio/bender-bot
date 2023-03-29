@@ -96,7 +96,7 @@ def generate(say, body):
 def reset_context(body, say):
     channel_id = body["channel_id"]
     context.CHAT_CONTEXT[channel_id].clear()
-    say("Done :white_check_mark:")  # Should probably be a private message
+    say("Done ✅")  # Should probably be a private message
 
 
 # Catch all (should be last handler)
