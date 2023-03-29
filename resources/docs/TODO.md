@@ -16,3 +16,4 @@
 - [x] Better error handling
 - [x] Code Refactoring
 - [x] Fix Logging
+- [ ] Support Context in Redis
