@@ -94,10 +94,9 @@ def generate(say, body):
 # Respond to /reset commands
 @app.command("/reset")
 def reset_context(body, say):
-    logger.debug(body)
-    channel_id = body["event"]["channel"]
+    channel_id = body["channel_id"]
     context.CHAT_CONTEXT[channel_id].clear()
-    say("Done :white_check_mark:")  # Should probably be a private message
+    say("Hmm, I forgot what we were talking about 🤔")  # Should probably be a private message
 
 
 # Catch all (should be last handler)
