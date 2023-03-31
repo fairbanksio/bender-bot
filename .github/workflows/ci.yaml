@@ -114,8 +114,13 @@ jobs:
           file: ./Dockerfile
           push: true
           tags: ${{ steps.docker-tags.outputs.tags }}
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
+          cache-from: type=local,src=/tmp/.buildx-cache
+          cache-to: type=local,dest=/tmp/.buildx-cache
+
+    - name: Remove cache
+        run: |
+          rm -rf /tmp/.buildx-cache
+          mv /tmp/.buildx-cache-new /tmp/.buildx-cache
 
       - name: Package and publish Helm Chart
         id: publish-helm
