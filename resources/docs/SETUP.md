@@ -33,7 +33,7 @@ docker run -d -p 3000:3000 jonfairbanks/bender-bot
 ```
 alternate:
 ```
-docker run -it -v /path/to/src:/home/worker/src --rm --env-file .env jonfairbanks/bender-bot
+docker run -it -v /path/to/src:/home/worker --rm --env-file .env jonfairbanks/bender-bot
 ```
 #### Docker-Compose
 
