@@ -37,15 +37,11 @@ def middleware(ack, body, next):
 def message_bender(body, say, client):
     # Gather event details
     channel_id = body["event"]["channel"]
-    message_ts = body['event']['ts']
+    message_ts = body["event"]["ts"]
 
     # Add an emoji to the incoming requests
     try:
-        client.reactions_add(
-            channel=channel_id,
-            timestamp=message_ts,
-            name="eyes"
-        )
+        client.reactions_add(channel=channel_id, timestamp=message_ts, name="eyes")
     except Exception as e:
         logger.error(f"Slackmoji Failed: {e}")
 
@@ -109,7 +105,9 @@ def generate(say, body):
 def reset_context(body, say):
     channel_id = body["channel_id"]
     context.CHAT_CONTEXT[channel_id].clear()
-    say("Hmm, I forgot what we were talking about 🤔")  # Should probably be a private message
+    say(
+        "Hmm, I forgot what we were talking about 🤔"
+    )  # Should probably be a private message
 
 
 # Catch all (should be last handler)
