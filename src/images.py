@@ -32,7 +32,7 @@ def generate_image(image_prompt):
         image = version.predict(**inputs)
     except Exception as e:
         # Handle any exceptions that arise during image generation.
-        logger.error(f"Error generating image: {e}\n")
+        logger.error(f"⛔ Error generating image: {e}\n")
         return None
 
     return image[0]

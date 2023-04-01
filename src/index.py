@@ -14,6 +14,18 @@ from slack_bolt.adapter.socket_mode import SocketModeHandler
 
 load_dotenv()
 
+# Determine Mode
+mode = os.getenv("BOT_MODE", "RESPOND")  # RESPOND or LISTEN
+if mode.upper() == "RESPOND":
+    slack_mode = "app_mention"
+elif mode.upper() == "LISTEN":
+    slack_mode = {"type": "message", "subtype": None}
+else:
+    logger.warning(
+        "BOT_MODE should be of type RESPOND or LISTEN; defaulting to RESPOND"
+    )
+    slack_mode = "app_mention"
+
 # Setup Slack app
 app = App(
     token=os.environ.get("SLACK_BOT_TOKEN"),
@@ -32,18 +44,38 @@ def middleware(ack, body, next):
     return next()
 
 
-# Respond to @BOT mentions
-@app.event("app_mention")
-def message_bender(body, say, client):
-    # Gather event details
-    channel_id = body["event"]["channel"]
-    message_ts = body["event"]["ts"]
+# Handle message edits
+@app.event(event={"type": "message", "subtype": "message_changed"})
+def handle_change_events(body):
+    try:
+        context.handle_change(body)
+    except Exception as e:
+        logger.debug(f"Change Message Failed: {e}")
 
+
+# Handle message deletion
+@app.event(event={"type": "message", "subtype": "message_deleted"})
+def handle_delete_events(body):
+    try:
+        context.handle_delete(body)
+    except Exception as e:
+        logger.debug(f"Delete Message Failed: {e}")
+
+
+# Respond to message events
+@app.event(slack_mode)
+def handle_message_events(body, say, client):
     # Add an emoji to the incoming requests
     try:
+        channel_id = body["event"]["channel"]
+        message_ts = body["event"]["ts"]
         client.reactions_add(channel=channel_id, timestamp=message_ts, name="eyes")
     except Exception as e:
         logger.error(f"Slackmoji Failed: {e}")
+
+    # Artificial Wait to Prevent Spam in LISTEN mode
+    if os.getenv("BOT_MODE") == "LISTEN":
+        time.sleep(60)
 
     # Make a call to OpenAI
     start_time = time.time()
@@ -69,7 +101,7 @@ def message_bender(body, say, client):
                         + "¢ || Context Depth: "
                         + str(len(context.CHAT_CONTEXT[channel_id]))
                         + " || Model: "
-                        + str(ai_resp["model"])
+                        + str(ai_resp["model"].upper())
                         + " || Response Time: "
                         + str(elapsed_time)
                         + "s",
@@ -100,14 +132,19 @@ def generate(say, body):
     )
 
 
+# Respond to /context commands
+@app.command("/context")
+def get_context(body, say):
+    channel_id = body["channel_id"]
+    say("```" + {context.CHAT_CONTEXT[channel_id]} + "```")
+
+
 # Respond to /reset commands
 @app.command("/reset")
 def reset_context(body, say):
     channel_id = body["channel_id"]
     context.CHAT_CONTEXT[channel_id].clear()
-    say(
-        "Hmm, I forgot what we were talking about 🤔"
-    )  # Should probably be a private message
+    say("Hmm, I forgot what we were talking about 🤔")
 
 
 # Catch all (should be last handler)

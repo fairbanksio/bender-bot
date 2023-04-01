@@ -40,3 +40,35 @@ def handle_events(body):
         # Log the incoming event
         logger.debug(f"Incoming event: {body['event']}\n")
     return
+
+
+def handle_change(body):
+    # Log the changed message
+    message_text = body["event"]["previous_message"]["text"]
+    new_message_text = body["event"]["message"]["text"]
+    print(f"{message_text} ➞ {new_message_text}\n\n")
+    channel_id = body["event"]["channel"]
+    try:
+        for i, s in enumerate(CHAT_CONTEXT[channel_id]):
+            if message_text in s["content"]:
+                CHAT_CONTEXT[channel_id][i]["content"] = new_message_text
+                logger.debug(
+                    f"Context changed: [{channel_id}] {message_text} ➞ {new_message_text}\n"
+                )
+                break
+    except Exception as e:
+        logger.error(f"Change failed: [{channel_id}] {e}\n")
+
+
+def handle_delete(body):
+    # Log the deleted message
+    message_text = body["event"]["previous_message"]["text"]
+    channel_id = body["event"]["channel"]
+    try:
+        for i, s in enumerate(CHAT_CONTEXT[channel_id]):
+            if message_text in s["content"]:
+                CHAT_CONTEXT[channel_id].remove(CHAT_CONTEXT[channel_id][i])
+                logger.debug(f"Context deleted: [{channel_id}] {message_text}\n")
+                break
+    except Exception as e:
+        logger.error(f"Delete failed: [{channel_id}] {e}\n")
