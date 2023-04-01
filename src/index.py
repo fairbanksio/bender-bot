@@ -39,14 +39,13 @@ def message_bender(body, say):
     channel_id = body["event"]["channel"]
     message_ts = body['event']['ts']
 
-    # Add an emoji to the incoming message
+    # Add an emoji to the incoming requests
     try:
-        result = app.client.reactions.add(
+        app.client.reactions.add(
             channel=channel_id,
             timestamp=message_ts,
             name="eyes"
         )
-        logger.debug(f"Slackmoji Added: {result}")
     except Exception as e:
         logger.error(f"Slackmoji Failed: {e}")
 
