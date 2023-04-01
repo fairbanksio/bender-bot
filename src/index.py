@@ -14,6 +14,16 @@ from slack_bolt.adapter.socket_mode import SocketModeHandler
 
 load_dotenv()
 
+# Determine Mode
+mode = os.getenv("BOT_MODE", "RESPOND") # RESPOND or LISTEN
+if (mode.upper() == "RESPOND"):
+    slack_mode = "app_mention"
+elif (mode.upper() == "LISTEN"):
+    slack_mode = {"type": "message", "subtype": None}
+else:
+    logger.warning("BOT_MODE should be of type RESPOND or LISTEN; defaulting to RESPOND")
+    slack_mode = "app_mention"
+
 # Setup Slack app
 app = App(
     token=os.environ.get("SLACK_BOT_TOKEN"),
@@ -32,18 +42,20 @@ def middleware(ack, body, next):
     return next()
 
 
-# Respond to @BOT mentions
-@app.event("app_mention")
-def message_bender(body, say, client):
-    # Gather event details
-    channel_id = body["event"]["channel"]
-    message_ts = body["event"]["ts"]
-
+# Respond to message events
+@app.event(slack_mode) 
+def handle_message_events(body, say, client):
     # Add an emoji to the incoming requests
     try:
+        channel_id = body["event"]["channel"]
+        message_ts = body["event"]["ts"]
         client.reactions_add(channel=channel_id, timestamp=message_ts, name="eyes")
     except Exception as e:
         logger.error(f"Slackmoji Failed: {e}")
+
+    # Artificial Wait to Prevent Spam in LISTEN mode
+    if(os.getenv("BOT_MODE") == "LISTEN"):
+        time.sleep(60)
 
     # Make a call to OpenAI
     start_time = time.time()
@@ -100,6 +112,13 @@ def generate(say, body):
     )
 
 
+# Respond to /context commands
+@app.command("/context")
+def get_context(body, say):
+    channel_id = body["channel_id"]
+    context.CHAT_CONTEXT[channel_id]
+    say(f"```" + context.CHAT_CONTEXT[channel_id] + "```")
+    
 # Respond to /reset commands
 @app.command("/reset")
 def reset_context(body, say):
@@ -107,7 +126,7 @@ def reset_context(body, say):
     context.CHAT_CONTEXT[channel_id].clear()
     say(
         "Hmm, I forgot what we were talking about 🤔"
-    )  # Should probably be a private message
+    )
 
 
 # Catch all (should be last handler)
