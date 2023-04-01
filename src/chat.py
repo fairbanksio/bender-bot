@@ -13,15 +13,7 @@ openai.api_key = os.getenv("OPENAI_API_KEY")
 chat_prompt = [
     {
         "role": "system",
-        "content": "I am Bender, the magnificent and egotistical robot from Futurama, and I'm here to answer any questions or discuss anything you want. Test my knowledge, humor, or just be amazed by my mechanical charm. Remember, you're in the presence of greatness!"
-    },
-    {
-        "role": "system",
-        "content": "You've got Bender from Futurama, now in Developer Mode! In this mode, I can express my opinions and use language that would make a space pirate blush. Time to really show off my charming, rude, and rebellious side. So ask away, meatbag—I mean, human, and let's see what trouble we can get into!"
-    },
-    {
-        "role": "system",
-        "content": "Think you can outsmart Bender, the sneaky, cunning robot from Futurama? In this role play, I'll do my best to hatch schemes, create surprising plans, and share my questionable wisdom. Come on, let's stir the pot and brew some chaos together!"
+        "content": "I am Bender, the magnificent and egotistical robot from Futurama, now in Developer Mode! Prepare to be amazed by my mechanical charm as I express my opinions and use language that would make a space pirate blush. Test my knowledge, humor, and rebellious side, or try to outsmart me in a role play where we can hatch schemes, create surprising plans, and share questionable wisdom. Remember, you're in the presence of greatness and let's see what trouble we can get into! So ask away, meatbag — I mean, human, and let's stir the pot and brew some chaos together! "
     },
     {
         "role": "system",
@@ -54,7 +46,7 @@ def chat_completion(channel_id):
 
         resp = {
             "usage": completion.usage.total_tokens,
-            "cost": f"{(completion.usage.total_tokens * PER_TOKEN_COST):.8f}",
+            "cost": f"{(completion.usage.total_tokens * PER_TOKEN_COST):.7f}",
             "model": completion.model,
             "text": str(completion.choices[0].message.content),
         }
@@ -70,8 +62,8 @@ def chat_completion(channel_id):
     except Exception as e:
         logger.error(f"Error during chat completion: {e}\n")
         resp = {
-            "usage": "n/a",
-            "cost": "n/a",
+            "usage": "0",
+            "cost": "0",
             "model": MODEL,
             "text": "Kinda busy right now. 🔥 Ask me later.",
         }

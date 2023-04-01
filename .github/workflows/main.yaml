@@ -42,12 +42,12 @@ jobs:
         run: helm lint ./chart
 
   release:
-    name: "Release"
+    name: Publish Docker Image
     runs-on: ubuntu-latest
     steps:
       - name: Checkout source code
         id: checkout-code
-        uses: "actions/checkout@v3"
+        uses: actions/checkout@v3
         with:
           ref: ${{ github.ref }}
 
@@ -110,10 +110,10 @@ jobs:
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,dest=/tmp/.buildx-cache
 
-    - name: Remove cache
-        run: |
-          rm -rf /tmp/.buildx-cache
-          mv /tmp/.buildx-cache-new /tmp/.buildx-cache
+      - name: Remove cache
+          run: |
+            rm -rf /tmp/.buildx-cache
+            mv /tmp/.buildx-cache-new /tmp/.buildx-cache
 
       - name: Package and publish Helm Chart
         id: publish-helm
