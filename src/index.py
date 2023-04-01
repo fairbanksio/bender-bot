@@ -34,14 +34,14 @@ def middleware(ack, body, next):
 
 # Respond to @BOT mentions
 @app.event("app_mention")
-def message_bender(body, say):
+def message_bender(body, say, client):
     # Gather event details
     channel_id = body["event"]["channel"]
     message_ts = body['event']['ts']
 
     # Add an emoji to the incoming requests
     try:
-        app.client.reactions.add(
+        client.reactions_add(
             channel=channel_id,
             timestamp=message_ts,
             name="eyes"
