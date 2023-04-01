@@ -1,3 +1,4 @@
+import json
 import openai
 import os
 
@@ -43,7 +44,7 @@ def chat_completion(channel_id):
         completion = openai.ChatCompletion.create(
             model=MODEL, messages=request, request_timeout=TIMEOUT
         )
-        logger.debug(f"OpenAI Response: {completion}\n")
+        logger.debug(f"OpenAI Response: {json.dumps(completion)}\n")
 
         resp = {
             "usage": completion.usage.total_tokens,
