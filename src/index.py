@@ -81,7 +81,7 @@ def handle_message_events(body, say, client):
                         + "¢ || Context Depth: "
                         + str(len(context.CHAT_CONTEXT[channel_id]))
                         + " || Model: "
-                        + str(ai_resp["model"])
+                        + str(ai_resp["model"].upper())
                         + " || Response Time: "
                         + str(elapsed_time)
                         + "s",
