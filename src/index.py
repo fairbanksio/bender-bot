@@ -44,6 +44,24 @@ def middleware(ack, body, next):
     return next()
 
 
+# Handle message edits
+@app.event(event={"type": "message", "subtype": "message_changed"})
+def handle_change_events(body):
+    try:
+        context.handle_change(body)
+    except Exception as e:
+        logger.debug(f"Change Message Failed: {e}")
+
+
+# Handle message deletion
+@app.event(event={"type": "message", "subtype": "message_deleted"})
+def handle_delete_events(body):
+    try:
+        context.handle_delete(body)
+    except Exception as e:
+        logger.debug(f"Delete Message Failed: {e}")
+
+
 # Respond to message events
 @app.event(slack_mode)
 def handle_message_events(body, say, client):
