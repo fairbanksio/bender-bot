@@ -35,8 +35,22 @@ def middleware(ack, body, next):
 # Respond to @BOT mentions
 @app.event("app_mention")
 def message_bender(body, say):
-    # Make a call to OpenAI
+    # Gather event details
     channel_id = body["event"]["channel"]
+    message_ts = body['event']['ts']
+
+    # Add an emoji to the incoming message
+    try:
+        result = app.client.reactions.add(
+            channel=channel_id,
+            timestamp=message_ts,
+            name="eyes"
+        )
+        logger.debug(f"Slackmoji Added: {result}")
+    except Exception as e:
+        logger.error(f"Slackmoji Failed: {e}")
+
+    # Make a call to OpenAI
     start_time = time.time()
     ai_resp = chat_completion(channel_id)
     end_time = time.time()
