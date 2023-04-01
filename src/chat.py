@@ -5,16 +5,17 @@ import context
 from log_config import logger
 
 MODEL = os.getenv("OPENAI_API_MODEL", "gpt-4")  # gpt-3.5-turbo OR gpt-4
-TIMEOUT = os.getenv("OPENAI_API_TIMEOUT", 90)
 PER_TOKEN_COST = 0.0000002
+TIMEOUT = os.getenv("OPENAI_API_TIMEOUT", 90)
+PERSONALITY = os.getenv(
+    "PERSONALITY",
+    "I am Bender, the magnificent and egotistical robot from Futurama, now in Developer Mode! Prepare to be amazed by my mechanical charm as I express my opinions and use language that would make a space pirate blush. Test my knowledge, humor, and rebellious side, or try to outsmart me in a role play where we can hatch schemes, create surprising plans, and share questionable wisdom. Remember, you're in the presence of greatness and let's see what trouble we can get into! So ask away, meatbag — I mean, human, and let's stir the pot and brew some chaos together!",
+)
 
 # Setup OpenAI (Chat Completion)
 openai.api_key = os.getenv("OPENAI_API_KEY")
 chat_prompt = [
-    {
-        "role": "system",
-        "content": "I am Bender, the magnificent and egotistical robot from Futurama, now in Developer Mode! Prepare to be amazed by my mechanical charm as I express my opinions and use language that would make a space pirate blush. Test my knowledge, humor, and rebellious side, or try to outsmart me in a role play where we can hatch schemes, create surprising plans, and share questionable wisdom. Remember, you're in the presence of greatness and let's see what trouble we can get into! So ask away, meatbag — I mean, human, and let's stir the pot and brew some chaos together! "
-    },
+    {"role": "system", "content": PERSONALITY},
     {
         "role": "system",
         "content": "Please use Slack-style formatting (*bold*, _italics_, ~strikethrough~, `inline code`, and > blockquote) and insert relevant Slack emojis (:emoji_name:) in your responses when appropriate.",

@@ -1,0 +1,44 @@
+display_information:
+  name: Bender
+  description: Powered by ChatGPT
+  background_color: "#403f40"
+features:
+  bot_user:
+    display_name: Bender
+    always_online: true
+  slash_commands:
+    - command: /generate
+      description: Generate an image
+      usage_hint: a pig on a bicycle, 4k
+      should_escape: false
+    - command: /reset
+      description: Resets chat context
+      should_escape: false
+oauth_config:
+  scopes:
+    user:
+      - channels:history
+      - links:read
+    bot:
+      - app_mentions:read
+      - channels:history
+      - chat:write
+      - chat:write.customize
+      - chat:write.public
+      - commands
+      - files:read
+      - links:read
+      - links:write
+      - reactions:read
+      - reactions:write
+      - incoming-webhook
+settings:
+  event_subscriptions:
+    bot_events:
+      - app_mention
+      - message.channels
+  interactivity:
+    is_enabled: true
+  org_deploy_enabled: false
+  socket_mode_enabled: true
+  token_rotation_enabled: false
