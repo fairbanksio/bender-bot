@@ -46,7 +46,7 @@ def chat_completion(channel_id):
 
         resp = {
             "usage": completion.usage.total_tokens,
-            "cost": f"{(completion.usage.total_tokens * PER_TOKEN_COST):.8f}",
+            "cost": f"{(completion.usage.total_tokens * PER_TOKEN_COST):.7f}",
             "model": completion.model,
             "text": str(completion.choices[0].message.content),
         }
@@ -62,8 +62,8 @@ def chat_completion(channel_id):
     except Exception as e:
         logger.error(f"Error during chat completion: {e}\n")
         resp = {
-            "usage": "n/a",
-            "cost": "n/a",
+            "usage": "0",
+            "cost": "0",
             "model": MODEL,
             "text": "Kinda busy right now. 🔥 Ask me later.",
         }
