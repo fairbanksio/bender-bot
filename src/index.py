@@ -3,6 +3,7 @@ import sys
 import time
 
 import context
+import files
 
 from images import generate_image
 from chat import chat_completion
@@ -65,6 +66,7 @@ def handle_delete_events(body):
 # Respond to message events
 @app.event(slack_mode)
 def handle_message_events(body, say, client):
+
     # Add an emoji to the incoming requests
     try:
         channel_id = body["event"]["channel"]
@@ -72,7 +74,31 @@ def handle_message_events(body, say, client):
         client.reactions_add(channel=channel_id, timestamp=message_ts, name="eyes")
     except Exception as e:
         logger.error(f"Slackmoji Failed: {e}")
+    
+    # Catch files
+    if "files" in body["event"].keys():
+        try:
+            # extract file info
+            attached_file = body["event"]["files"][0]
+            remote_file_url = attached_file["url_private_download"]
+            remote_file_name = attached_file["name"]
 
+            # save temp copy and get local file path
+            downloaded_image_path = files.save_file(remote_file_url, remote_file_name)
+
+            # Do something with the file
+            # check mimetype of file, and if supported image, send to CLIPInterrogator
+            logger.debug(f"Image downloaded: {downloaded_image_path}")
+
+            # delete temp file
+            files.delete_file(downloaded_image_path)
+
+        except Exception as e:
+            logger.error(f"Failed to process file: {e}")   
+    else:
+        logger.debug("Event did not contain any files to process")
+
+     
     # Artificial Wait to Prevent Spam in LISTEN mode
     if os.getenv("BOT_MODE") == "LISTEN":
         time.sleep(60)
