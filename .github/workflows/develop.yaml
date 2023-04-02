@@ -44,6 +44,7 @@ jobs:
 
   helm-lint:
     name: Lint Helm chart
+    depends-on: [black-lint]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -54,6 +55,7 @@ jobs:
 
   release:
     name: Publish Docker Image
+    depends-on: [black-lint, helm-lint]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout source code
