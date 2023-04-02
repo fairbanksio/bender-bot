@@ -1,3 +1,4 @@
+import json
 import os
 import sys
 import time
@@ -32,6 +33,9 @@ app = App(
     token=os.environ.get("SLACK_BOT_TOKEN"),
     signing_secret=os.environ.get("SLACK_SIGNING_SECRET"),
 )
+
+
+
 
 
 # Slack Handlers
@@ -158,7 +162,7 @@ def generate(say, body):
 @app.command("/context")
 def get_context(body, say):
     channel_id = body["channel_id"]
-    say("```" + {context.CHAT_CONTEXT[channel_id]} + "```")
+    say("```" + {json.dumps(context.CHAT_CONTEXT[channel_id])} + "```")
 
 
 # Respond to /reset commands
