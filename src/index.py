@@ -35,9 +35,6 @@ app = App(
 )
 
 
-
-
-
 # Slack Handlers
 @app.middleware
 def middleware(ack, body, next):
