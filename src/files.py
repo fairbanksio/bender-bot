@@ -38,6 +38,10 @@ def save_file(file_url, file_name):
 
     return file_path
 
+def open_file(file_path):
+    with open(file_path, 'r') as file:
+        contents = file.read()
+        return contents
 
 def delete_file(file_path):
     try:

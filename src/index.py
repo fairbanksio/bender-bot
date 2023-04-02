@@ -89,22 +89,23 @@ def handle_message_events(body, say, client):
             local_file_path = files.save_file(remote_file_url, remote_file_name)
 
             # TO DO: check mimetype of file
-            mimetype = mimetypes.guess_type(local_file_path)
+            mimetype, encoding = mimetypes.guess_type(local_file_path)
             if mimetype:
-                logger.debug(f"The MIME type of '{local_file_path}' is: {mimetype}")
+                logger.debug(f"The MIME type of '{local_file_path}' is: {mimetype}\n")
             else:
-                logger.debug(f"🤷 Unknown MIME type for '{local_file_path}'")
+                logger.debug(f"🤷 Unknown MIME type for '{local_file_path}'\n")
 
-            if mimetype == "image":
+            if "image" in mimetype:
                 # Filetype: Image
                 prompt = interrogate_image(local_file_path)
-                logger.debug(f"🔍 Extracted prompt: {prompt}")
+                logger.debug(f"🔍 Extracted prompt: {prompt}\n")
                 # TO DO: Inject the prompt (if image) into CONTEXT
-            elif mimetype == "text":
+            elif "text" in mimetype:
+                content = files.open_file(local_file_path)
+                logger.debug(f"📂 File content: {content}")
                 # TO DO: Inject into CONTEXT
-                pass
             else:
-                # TO DO: Handle other cases
+                # TO DO: Handle other use-cases
                 pass
 
             # Delete temp file
