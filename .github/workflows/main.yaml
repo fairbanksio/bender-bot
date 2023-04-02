@@ -78,7 +78,7 @@ jobs:
         id: update-version
         run: |
           # Update app version
-          sed -i 's/__version__ = "\(.*\)"/__version__ = ${{ steps.bump-tag.outputs.new_tag }}/' __version__.py
+          sed -i 's/__version__ = "\(.*\)"/__version__ = ${{ steps.bump-tag.outputs.new_tag }}/' ./src/__version__.py
           # Update Helm chart version
           sed -r -i "s/(version:[^*]|appVersion:[^*])([[:alnum:].]*.*)/\1${{ steps.bump-tag.outputs.new_tag }}/g" ./chart/Chart.yaml
 
