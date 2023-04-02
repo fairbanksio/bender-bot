@@ -18,7 +18,7 @@
 
 - Setup pipenv: `pip install pipenv && pipenv shell`
 - Install dependencies: `pipenv install`
-- Launch the service with your Slack token: `SLACK_BOT_TOKEN='xoxb-xxxxx' SLACK_SIGNING_SECRET='xxxxx' OPENAI_API_KEY='xxxxx' REPLICATE_API_TOKEN='xxxxx' python3 index.py` 
+- Launch the service with your Slack token: `SLACK_APP_TOKEN='xapp-xxxxx' SLACK_BOT_TOKEN='xoxb-xxxxx' SLACK_SIGNING_SECRET='xxxxx' OPENAI_API_KEY='xxxxx' REPLICATE_API_TOKEN='xxxxx' python3 index.py` 
 - For development purposes, front the service with ngrok in a new window: `ngrok http 3000`. Note the returned ngrok endpoint. (**This url may change over time!**)
 - On [Slack](https://api.slack.com/apps), provide https://YOUR-NGROK-URL.ngrok.io/slack/events as the endpoint under Event Subscriptions.
 - Setup Slack slash commands
@@ -29,16 +29,14 @@
 
 bender-bot is also available for deployment via Docker:
 ```
-docker run -d -p 3000:3000 jonfairbanks/bender-bot
+docker run -d --env-file .env jonfairbanks/bender-bot
 ```
-alternate:
-```
-docker run -it -v /path/to/src:/home/worker/src --rm --env-file .env jonfairbanks/bender-bot
-```
+
 #### Docker-Compose
 
-bender-bot is also available for deployment via Docker compose:
+bender-bot can also be stood up using Docker Compose:
 ```
 docker compose up
 ```
-Make sure to rename .env.sample to .env and change values
+
+Remember to rename _.env.sample_ to _.env_ and change values
