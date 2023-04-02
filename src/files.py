@@ -45,7 +45,7 @@ def save_file(file_url,file_name):
 
 def delete_file(file_path):
     try:
-        os.remove("output.txt")
+        os.remove(file_path)
         return True
 
     except FileNotFoundError:
