@@ -88,9 +88,8 @@ def handle_message_events(body, say, client):
 
             # Do something with the file
             # check mimetype of file, and if supported image, send to CLIPInterrogator
-            logger.debug(f"💾 File saved: {downloaded_image_path}")
 
-            # delete temp file
+            # Delete temp file
             files.delete_file(downloaded_image_path)
 
         except Exception as e:
