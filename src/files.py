@@ -33,16 +33,19 @@ def save_file(file_url, file_name):
 
     except Exception as e:
         # Handle any exceptions that arise during image generation.
-        logger.error(f"⛔ Error saving image: {e}\n")
+        logger.error(f"⛔ Error saving file: {e}\n")
         return None
 
     return file_path
 
 
 def open_file(file_path):
-    with open(file_path, "r") as file:
-        contents = file.read()
-        return contents
+    try:
+        with open(file_path, "r") as file:
+            contents = file.read()
+            return contents
+    except Exception as e:
+        logger.error(f"⛔ Error opening file: {e}\n")
 
 
 def delete_file(file_path):
