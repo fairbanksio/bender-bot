@@ -66,7 +66,6 @@ def handle_delete_events(body):
 # Respond to message events
 @app.event(slack_mode)
 def handle_message_events(body, say, client):
-
     # Add an emoji to the incoming requests
     try:
         channel_id = body["event"]["channel"]
@@ -74,7 +73,7 @@ def handle_message_events(body, say, client):
         client.reactions_add(channel=channel_id, timestamp=message_ts, name="eyes")
     except Exception as e:
         logger.error(f"Slackmoji Failed: {e}")
-    
+
     # Catch files
     if "files" in body["event"].keys():
         try:
@@ -94,11 +93,10 @@ def handle_message_events(body, say, client):
             files.delete_file(downloaded_image_path)
 
         except Exception as e:
-            logger.error(f"Failed to process file: {e}")   
+            logger.error(f"Failed to process file: {e}")
     else:
         logger.debug("Event did not contain any files to process")
 
-     
     # Artificial Wait to Prevent Spam in LISTEN mode
     if os.getenv("BOT_MODE") == "LISTEN":
         time.sleep(60)

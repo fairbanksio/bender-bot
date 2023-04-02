@@ -1,13 +1,11 @@
-import requests
-from log_config import logger
-import time
 import datetime
 import os
+import requests
 
-
+from log_config import logger
 
 # Save a remote file to local disk
-def save_file(file_url,file_name):
+def save_file(file_url, file_name):
     """
     Downloads a file from a url
 
@@ -19,21 +17,21 @@ def save_file(file_url,file_name):
     """
 
     try:
-        # get unix timestamp
+        # Get unix timestamp
         time_now = datetime.datetime.utcnow()
         timestamp_now = time_now.strftime("%s")
 
-        # generate tmp file with timestamp
-        file_name = timestamp_now + '-' + file_name
+        # Generate tmp file with timestamp
+        file_name = timestamp_now + "-" + file_name
 
-        # generate relative path based on current running location + generated file name
+        # Generate relative path based on current running location + generated file name
         file_path = os.path.join(os.getcwd(), file_name)
 
-        # get data from remote source
+        # Get data from remote source
         file_data = requests.get(file_url).content
 
-        # save file locally
-        with open(file_path, 'wb') as handler:
+        # Save file locally
+        with open(file_path, "wb") as handler:
             handler.write(file_data)
 
     except Exception as e:
@@ -42,6 +40,7 @@ def save_file(file_url,file_name):
         return None
 
     return file_path
+
 
 def delete_file(file_path):
     try:
