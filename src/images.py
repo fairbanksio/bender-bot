@@ -64,7 +64,7 @@ def interrogate_image(image_filepath):
         results = version.predict(**inputs)
     except Exception as e:
         # Handle any exceptions that arise during image generation.
-        logger.error(f"Error interrogating image: {e}\n")
+        logger.error(f"⛔ Error interrogating image: {e}\n")
         return None
 
     return results
