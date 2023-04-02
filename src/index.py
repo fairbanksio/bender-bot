@@ -1,3 +1,4 @@
+import json
 import os
 import sys
 import time
@@ -87,9 +88,8 @@ def handle_message_events(body, say, client):
 
             # Do something with the file
             # check mimetype of file, and if supported image, send to CLIPInterrogator
-            logger.debug(f"💾 File saved: {downloaded_image_path}")
 
-            # delete temp file
+            # Delete temp file
             files.delete_file(downloaded_image_path)
 
         except Exception as e:
@@ -158,7 +158,7 @@ def generate(say, body):
 @app.command("/context")
 def get_context(body, say):
     channel_id = body["channel_id"]
-    say("```" + {context.CHAT_CONTEXT[channel_id]} + "```")
+    say("```" + {json.dumps(context.CHAT_CONTEXT[channel_id])} + "```")
 
 
 # Respond to /reset commands

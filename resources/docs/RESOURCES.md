@@ -2,6 +2,7 @@
 
 #### Slack
 - Slack Bolt for Python: https://github.com/slackapi/bolt-python
+- Slack Bolt Examples: https://github.com/slackapi/bolt-python/tree/main/examples
 - Slack API docs: https://pypi.org/project/slack-sdk
 - Slack Block Kit Builder: https://app.slack.com/block-kit-builder
 

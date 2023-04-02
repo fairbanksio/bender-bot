@@ -30,9 +30,22 @@ jobs:
   #       uses: github/codeql-action/upload-sarif@v2
   #       with:
   #         sarif_file: 'trivy-results.sarif'
-  
+
+  black-lint:
+    name: Lint Python app
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Lint app w/ Black
+        uses: rickstaa/action-black@v1
+        with:
+          black_args: "--check ."
+
   helm-lint:
     name: Lint Helm chart
+    needs: [black-lint]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -43,6 +56,7 @@ jobs:
 
   release:
     name: Publish Docker Image
+    needs: [black-lint, helm-lint]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout source code
@@ -63,6 +77,11 @@ jobs:
       - name: Update version in version files
         id: update-version
         run: |
+                - name: Update version in version files
+        id: update-version
+        run: |
+          # Update app version
+          sed -i 's/__version__ = "\(.*\)"/__version__ = ${{ steps.bump-tag.outputs.new_tag }}/' __version__.py
           # Update Helm chart version
           sed -r -i "s/(version:[^*]|appVersion:[^*])([[:alnum:].]*.*)/\1${{ steps.bump-tag.outputs.new_tag }}/g" ./chart/Chart.yaml
 
