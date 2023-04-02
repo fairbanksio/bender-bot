@@ -8,8 +8,8 @@
 - [x] Channel based context
 - [ ] Support Private Channels & Messages
 - [ ] Support File Uploads
-- [ ] Support for emoji events 🔥
-- [ ] Handle message edit events
+- [x] Support for emoji events 🔥
+- [x] Handle message change/delete events
 - [x] Investigate Slack-Bolt Socket Mode
 - [x] Prompt based image generation (Stable Diffusion)
 - [x] Improve Context via Chat History
