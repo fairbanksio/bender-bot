@@ -3,8 +3,6 @@ import replicate
 from log_config import logger
 
 
-
-
 def generate_image(image_prompt):
     """
     Generates an image based on the provided prompt using the Replicate library.
@@ -60,15 +58,13 @@ def interrogate_image(image_filepath):
     )
 
     # Define inputs
-    inputs = {
-        "image": image_filepath
-    }
+    inputs = {"image": image_filepath}
 
     try:
         results = version.predict(**inputs)
     except Exception as e:
         # Handle any exceptions that arise during image generation.
-        logger.error(f"Error interrogating image: {e}\n")
+        logger.error(f"⛔ Error interrogating image: {e}\n")
         return None
 
     return results

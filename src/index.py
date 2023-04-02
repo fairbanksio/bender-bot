@@ -23,7 +23,7 @@ elif mode.upper() == "LISTEN":
     slack_mode = {"type": "message", "subtype": None}
 else:
     logger.warning(
-        "BOT_MODE should be of type RESPOND or LISTEN; defaulting to RESPOND"
+        "⚠️ BOT_MODE should be of type RESPOND or LISTEN; defaulting to RESPOND"
     )
     slack_mode = "app_mention"
 
@@ -41,7 +41,7 @@ def middleware(ack, body, next):
     try:
         context.handle_events(body)
     except Exception as e:
-        logger.error(e)
+        logger.error(f"⛔ Event error: {e}")
     return next()
 
 
@@ -51,7 +51,7 @@ def handle_change_events(body):
     try:
         context.handle_change(body)
     except Exception as e:
-        logger.debug(f"Change Message Failed: {e}")
+        logger.debug(f"⛔ Change failed: {e}")
 
 
 # Handle message deletion
@@ -60,46 +60,42 @@ def handle_delete_events(body):
     try:
         context.handle_delete(body)
     except Exception as e:
-        logger.debug(f"Delete Message Failed: {e}")
+        logger.debug(f"⛔ Delete failed: {e}")
 
 
 # Respond to message events
 @app.event(slack_mode)
 def handle_message_events(body, say, client):
-
     # Add an emoji to the incoming requests
     try:
         channel_id = body["event"]["channel"]
         message_ts = body["event"]["ts"]
         client.reactions_add(channel=channel_id, timestamp=message_ts, name="eyes")
     except Exception as e:
-        logger.error(f"Slackmoji Failed: {e}")
-    
-    # Catch files
+        logger.error(f"⛔ Slackmoji failed: {e}")
+
+    # Handle files
     if "files" in body["event"].keys():
         try:
-            # extract file info
+            # Extract file info
             attached_file = body["event"]["files"][0]
             remote_file_url = attached_file["url_private_download"]
             remote_file_name = attached_file["name"]
 
-            # save temp copy and get local file path
+            # Save temp copy and get local file path
             downloaded_image_path = files.save_file(remote_file_url, remote_file_name)
 
             # Do something with the file
             # check mimetype of file, and if supported image, send to CLIPInterrogator
-            logger.debug(f"Image downloaded: {downloaded_image_path}")
+            logger.debug(f"💾 File saved: {downloaded_image_path}")
 
             # delete temp file
             files.delete_file(downloaded_image_path)
 
         except Exception as e:
-            logger.error(f"Failed to process file: {e}")   
-    else:
-        logger.debug("Event did not contain any files to process")
+            logger.error(f"⛔ Failed to process file: {e}")
 
-     
-    # Artificial Wait to Prevent Spam in LISTEN mode
+    # Artificial wait to prevent spam in LISTEN mode
     if os.getenv("BOT_MODE") == "LISTEN":
         time.sleep(60)
 
@@ -143,7 +139,7 @@ def handle_message_events(body, say, client):
 @app.command("/generate")
 def generate(say, body):
     prompt = body["text"]
-    logger.debug(f"Generate Image prompt: {prompt}")
+    logger.debug(f"📸 Generate image prompt: {prompt}")
     image = generate_image(prompt)
     say(
         text=prompt,
