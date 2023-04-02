@@ -77,9 +77,6 @@ jobs:
       - name: Update version in version files
         id: update-version
         run: |
-                - name: Update version in version files
-        id: update-version
-        run: |
           # Update app version
           sed -i 's/__version__ = "\(.*\)"/__version__ = ${{ steps.bump-tag.outputs.new_tag }}/' __version__.py
           # Update Helm chart version
