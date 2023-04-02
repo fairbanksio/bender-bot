@@ -30,6 +30,16 @@ jobs:
   #       with:
   #         sarif_file: 'trivy-results.sarif'
   
+  spell-check:
+    name: Spell Check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Check Spelling
+        uses: check-spelling/check-spelling@v0.0.21
+
   black-lint:
     name: Lint Python app
     runs-on: ubuntu-latest
