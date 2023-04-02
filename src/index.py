@@ -1,4 +1,5 @@
 import json
+import mimetypes
 import os
 import sys
 import time
@@ -6,7 +7,7 @@ import time
 import context
 import files
 
-from images import generate_image
+from images import generate_image, interrogate_image
 from chat import chat_completion
 from log_config import logger
 
@@ -46,7 +47,7 @@ def middleware(ack, body, next):
     return next()
 
 
-# Handle message edits
+# Handle message changes
 @app.event(event={"type": "message", "subtype": "message_changed"})
 def handle_change_events(body):
     try:
@@ -76,6 +77,7 @@ def handle_message_events(body, say, client):
         logger.error(f"⛔ Slackmoji failed: {e}")
 
     # Handle files
+    # TO DO: Move to context.py
     if "files" in body["event"].keys():
         try:
             # Extract file info
@@ -84,20 +86,36 @@ def handle_message_events(body, say, client):
             remote_file_name = attached_file["name"]
 
             # Save temp copy and get local file path
-            downloaded_image_path = files.save_file(remote_file_url, remote_file_name)
+            local_file_path = files.save_file(remote_file_url, remote_file_name)
 
-            # Do something with the file
-            # check mimetype of file, and if supported image, send to CLIPInterrogator
+            # TO DO: check mimetype of file
+            mimetype = mimetypes.guess_type(local_file_path)
+            if mimetype:
+                logger.debug(f"The MIME type of '{local_file_path}' is: {mimetype}")
+            else:
+                logger.debug(f"🤷 Unknown MIME type for '{local_file_path}'")
+
+            if mimetype == "image":
+                # Filetype: Image
+                prompt = interrogate_image(local_file_path)
+                logger.debug(f"🔍 Extracted prompt: {prompt}")
+                # TO DO: Inject the prompt (if image) into CONTEXT
+            elif mimetype == "text":
+                # TO DO: Inject into CONTEXT
+                pass
+            else:
+                # TO DO: Handle other cases
+                pass
 
             # Delete temp file
-            files.delete_file(downloaded_image_path)
+            files.delete_file(local_file_path)
 
         except Exception as e:
             logger.error(f"⛔ Failed to process file: {e}")
 
     # Artificial wait to prevent spam in LISTEN mode
-    if os.getenv("BOT_MODE") == "LISTEN":
-        time.sleep(60)
+    # if os.getenv("BOT_MODE") == "LISTEN":
+    #     time.sleep(60)
 
     # Make a call to OpenAI
     start_time = time.time()
