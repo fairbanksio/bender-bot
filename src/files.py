@@ -29,7 +29,7 @@ def save_file(file_url, file_name):
         with open(file_path, "wb") as handler:
             handler.write(response.content)
 
-        logger.debug(f"💾 File saved: {file_path}")
+        logger.debug(f"💾 File saved: {file_path}\n")
 
     except Exception as e:
         # Handle any exceptions that arise during image generation.
@@ -37,6 +37,12 @@ def save_file(file_url, file_name):
         return None
 
     return file_path
+
+
+def open_file(file_path):
+    with open(file_path, "r") as file:
+        contents = file.read()
+        return contents
 
 
 def delete_file(file_path):
