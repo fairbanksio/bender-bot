@@ -47,6 +47,7 @@ def handle_events(body):
             try:
                 # Extract file info
                 attached_file = body["event"]["files"][0]
+                print(attached_file)
                 remote_file_url = attached_file["url_private_download"]
                 remote_file_name = attached_file["name"]
 
@@ -54,26 +55,32 @@ def handle_events(body):
                 local_file_path = files.save_file(remote_file_url, remote_file_name)
 
                 # TO DO: check mimetype of file
-                mimetype = mimetypes.guess_type(local_file_path)
-                if mimetype:
-                    logger.debug(f"The MIME type of '{local_file_path}' is: {mimetype}")
-                else:
-                    logger.debug(f"🤷 Unknown MIME type for '{local_file_path}'")
+                mimetype, encoding = mimetypes.guess_type(local_file_path)
+                # if mimetype:
+                #     logger.debug(f"The MIME type of {local_file_path} is: {mimetype}")
+                # else:
+                #     logger.debug(f"🤷 Unknown MIME type for '{local_file_path}'")
 
-                if mimetype == "image":
+                if "image" in mimetype:
                     # Filetype: Image
-                    prompt = interrogate_image(local_file_path)
-                    logger.debug(f"🔍 Extracted prompt: {prompt}")
+                    print(mimetype)
+                    try:
+                        prompt = interrogate_image(local_file_path)
+                        logger.debug(f"🔍 Extracted prompt: {prompt}")
+                    except Exception as e:
+                        logger.error("⛔ Failed to interrogate image: {e}")
                     # TO DO: Inject the prompt (if image) into CONTEXT
-                elif mimetype == "text":
+                elif "text" in mimetype:
                     # TO DO: Inject into CONTEXT
+                    print(mimetype)
                     pass
                 else:
                     # TO DO: Handle other cases
+                    print(mimetype)
                     pass
 
                 # Delete temp file
-                files.delete_file(local_file_path)
+                # files.delete_file(local_file_path)
 
             except Exception as e:
                 logger.error(f"⛔ Failed to process file: {e}")
