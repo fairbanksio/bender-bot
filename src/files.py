@@ -24,25 +24,28 @@ def save_file(file_url, file_name):
         )
 
         # Download and save data from the remote source
-        response = requests.get(file_url)
+        access_token = "Bearer " + os.environ.get("SLACK_BOT_TOKEN")
+        response = requests.get(file_url, headers={"Authorization": access_token})
         response.raise_for_status()
         with open(file_path, "wb") as handler:
             handler.write(response.content)
 
         logger.debug(f"💾 File saved: {file_path}\n")
-
     except Exception as e:
         # Handle any exceptions that arise during image generation.
-        logger.error(f"⛔ Error saving image: {e}\n")
+        logger.error(f"⛔ Error saving file: {e}\n")
         return None
 
     return file_path
 
 
 def open_file(file_path):
-    with open(file_path, "r") as file:
-        contents = file.read()
-        return contents
+    try:
+        with open(file_path, "r") as file:
+            contents = file.read()
+            return contents
+    except Exception as e:
+        logger.error(f"⛔ Error opening file: {e}\n")
 
 
 def delete_file(file_path):
