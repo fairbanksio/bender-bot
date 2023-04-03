@@ -24,8 +24,8 @@ def save_file(file_url, file_name):
         )
 
         # Download and save data from the remote source
-        access_token = 'Bearer ' + os.environ.get("SLACK_BOT_TOKEN")
-        response = requests.get(file_url, headers={'Authorization': access_token})
+        access_token = "Bearer " + os.environ.get("SLACK_BOT_TOKEN")
+        response = requests.get(file_url, headers={"Authorization": access_token})
         response.raise_for_status()
         with open(file_path, "wb") as handler:
             handler.write(response.content)
