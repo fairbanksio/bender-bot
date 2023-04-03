@@ -1,13 +1,11 @@
 import json
-import mimetypes
 import os
 import sys
 import time
 
 import context
-import files
 
-from images import generate_image, interrogate_image
+from images import generate_image
 from chat import chat_completion
 from log_config import logger
 
@@ -17,8 +15,8 @@ from slack_bolt.adapter.socket_mode import SocketModeHandler
 
 load_dotenv()
 
-# Determine Mode
-mode = os.getenv("BOT_MODE", "RESPOND")  # RESPOND or LISTEN
+# Determine Mode -- RESPOND or LISTEN
+mode = os.getenv("BOT_MODE", "RESPOND")
 if mode.upper() == "RESPOND":
     slack_mode = "app_mention"
 elif mode.upper() == "LISTEN":
@@ -65,7 +63,7 @@ def handle_delete_events(body):
         logger.debug(f"⛔ Delete failed: {e}")
 
 
-# Respond to message events
+# Handle message events
 @app.event(slack_mode)
 def handle_message_events(body, say, client):
     # Add an emoji to the incoming requests
@@ -75,44 +73,6 @@ def handle_message_events(body, say, client):
         client.reactions_add(channel=channel_id, timestamp=message_ts, name="eyes")
     except Exception as e:
         logger.error(f"⛔ Slackmoji failed: {e}")
-
-    # Handle files
-    # TO DO: Move to context.py
-    if "files" in body["event"].keys():
-        try:
-            # Extract file info
-            attached_file = body["event"]["files"][0]
-            remote_file_url = attached_file["url_private_download"]
-            remote_file_name = attached_file["name"]
-
-            # Save temp copy and get local file path
-            local_file_path = files.save_file(remote_file_url, remote_file_name)
-
-            # TO DO: check mimetype of file
-            mimetype, encoding = mimetypes.guess_type(local_file_path)
-            if mimetype:
-                logger.debug(f"The MIME type of '{local_file_path}' is: {mimetype}\n")
-            else:
-                logger.debug(f"🤷 Unknown MIME type for '{local_file_path}'\n")
-
-            if "image" in mimetype:
-                # Filetype: Image
-                prompt = interrogate_image(local_file_path)
-                logger.debug(f"🔍 Extracted prompt: {prompt}\n")
-                # TO DO: Inject the prompt (if image) into CONTEXT
-            elif "text" in mimetype:
-                content = files.open_file(local_file_path)
-                logger.debug(f"📂 File content: {content}")
-                # TO DO: Inject into CONTEXT
-            else:
-                # TO DO: Handle other use-cases
-                pass
-
-            # Delete temp file
-            files.delete_file(local_file_path)
-
-        except Exception as e:
-            logger.error(f"⛔ Failed to process file: {e}")
 
     # Artificial wait to prevent spam in LISTEN mode
     # if os.getenv("BOT_MODE") == "LISTEN":
