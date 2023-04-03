@@ -51,7 +51,6 @@ def interrogate_image(image_filepath):
         A string describing the image
     """
     try:
-        print(f"Interrogating {image_filepath}")
         output = replicate.run(
             "pharmapsychotic/clip-interrogator:a4a8bafd6089e1716b06057c42b19378250d008b80fe87caa5cd36d40c1eda90",
             input={
@@ -59,7 +58,7 @@ def interrogate_image(image_filepath):
                 "clip_model_name": "ViT-H-14/laion2b_s32b_b79k",  # Best for Stable Diffusion 2.x
             },
         )
-        print(f"Interrogation Output: {output}")
+        logger.debug(f"🔍 Interrogation Output: {output}")
         return output
     except Exception as e:
         # Handle any exceptions that arise during image interrogation.
