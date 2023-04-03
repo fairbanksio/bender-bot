@@ -61,6 +61,7 @@ def handle_events(body):
                     try:
                         prompt = interrogate_image(local_file_path)
                         logger.debug(f"🔍 Extracted prompt: {prompt}")
+                        CHAT_CONTEXT[channel_id].append(prompt)
                     except Exception as e:
                         logger.error("⛔ Failed to interrogate image: {e}")
                     # TO DO: Inject the prompt (if image) into CONTEXT
