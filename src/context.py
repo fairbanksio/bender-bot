@@ -56,21 +56,31 @@ def handle_events(body):
                 # Check mimetype of file
                 mimetype, encoding = mimetypes.guess_type(local_file_path)
 
+                # Handle files based on mimetype
                 if "image" in mimetype:
-                    # Filetype: Image
                     try:
                         prompt = interrogate_image(local_file_path)
                         logger.debug(f"🔍 Extracted prompt: {prompt}")
-                        CHAT_CONTEXT[channel_id].append(prompt)
+                        CHAT_CONTEXT[channel_id].append(
+                            {"role": "user", "content": f"{prompt}"}
+                        )
                     except Exception as e:
                         logger.error("⛔ Failed to interrogate image: {e}")
-                    # TO DO: Inject the prompt (if image) into CONTEXT
-                elif "text" in mimetype:
-                    # TO DO: Inject into CONTEXT
-                    print(mimetype)
+                elif (
+                    "text" in mimetype
+                    or mimetype == "application/json"
+                    or mimetype == "application/pdf"
+                ):
+                    data = files.open_file(local_file_path)
+                    CHAT_CONTEXT[channel_id].append(
+                        {"role": "user", "content": f"{data}"}
+                    )
+                elif "audio" in mimetype:
+                    logger.debug(f"🎧 {mimetype} found but not yet supported")
+                elif "video" in mimetype:
+                    logger.debug(f"📹 {mimetype} found but not yet supported")
                 else:
-                    # TO DO: Handle other cases
-                    print(mimetype)
+                    logger.warning(f"⚠️ Unsupported filetype: {mimetype}")
 
                 # Delete temp file
                 files.delete_file(local_file_path)
