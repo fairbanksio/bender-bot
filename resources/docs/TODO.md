@@ -7,7 +7,7 @@
 - [x] Maintain conversation context
 - [x] Channel based context
 - [ ] Support Private Channels & Messages
-- [ ] Support File Uploads
+- [x] Support File Uploads
 - [x] Support for emoji events 🔥
 - [x] Handle message change/delete events
 - [x] Investigate Slack-Bolt Socket Mode
