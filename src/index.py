@@ -34,14 +34,6 @@ app = App(
 )
 
 
-# Slack Handlers
-# @app.middleware
-# def middleware(request, next):
-    # logger.debug(f"Request: {str(request)}")
-    # logger.debug(f"Headers: {request.headers}")
-    # next()
-
-
 # Handle message changes
 @app.event(event={"type": "message", "subtype": "message_changed"})
 def handle_change_events(body):

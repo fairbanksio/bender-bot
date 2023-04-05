@@ -60,7 +60,7 @@ def handle_events(body):
                     logger.debug("Found an image")
                     try:
                         prompt = interrogate_image(local_file_path)
-                        logger.debug(f"Prompt extracted: {prompt}")
+                        logger.debug(f"🔍 Extracted prompt: {prompt}")
                         CHAT_CONTEXT[channel_id].append(
                             {"role": "user", "content": f"{prompt}"}
                         )
