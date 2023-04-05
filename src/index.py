@@ -34,17 +34,6 @@ app = App(
 )
 
 
-# Slack Handlers
-@app.middleware
-def middleware(ack, body, next):
-    ack()
-    try:
-        context.handle_events(body)
-    except Exception as e:
-        logger.error(f"⛔ Event error: {e}")
-    return next()
-
-
 # Handle message changes
 @app.event(event={"type": "message", "subtype": "message_changed"})
 def handle_change_events(body):
@@ -65,18 +54,21 @@ def handle_delete_events(body):
 
 # Handle message events
 @app.event(slack_mode)
-def handle_message_events(body, say, client):
+def handle_app_mentions(ack, body, say, client):
+    ack()
     # Add an emoji to the incoming requests
     try:
         channel_id = body["event"]["channel"]
         message_ts = body["event"]["ts"]
+        message_type = body["event"]["type"]
         client.reactions_add(channel=channel_id, timestamp=message_ts, name="eyes")
     except Exception as e:
         logger.error(f"⛔ Slackmoji failed: {e}")
 
-    # Artificial wait to prevent spam in LISTEN mode
-    # if os.getenv("BOT_MODE") == "LISTEN":
-    #     time.sleep(60)
+    try:
+        context.handle_events(body)
+    except Exception as e:
+        logger.error(f"⛔ Event error: {e} - {body}")
 
     # Make a call to OpenAI
     start_time = time.time()
@@ -85,7 +77,7 @@ def handle_message_events(body, say, client):
     elapsed_time = f"{(end_time - start_time):.2f}"
 
     # Respond to the user
-    say(
+    return say(
         text=ai_resp["text"],
         blocks=[
             {"type": "section", "text": {"type": "mrkdwn", "text": ai_resp["text"]}},
@@ -116,7 +108,8 @@ def handle_message_events(body, say, client):
 
 # Respond to /generate commands
 @app.command("/generate")
-def generate(say, body):
+def generate(ack, say, body):
+    ack()
     prompt = body["text"]
     logger.debug(f"📸 Generate image prompt: {prompt}")
     image = generate_image(prompt)
@@ -135,14 +128,21 @@ def generate(say, body):
 
 # Respond to /context commands
 @app.command("/context")
-def get_context(body, say):
+def get_context(ack, body, say):
+    ack()
     channel_id = body["channel_id"]
-    say("```" + {json.dumps(context.CHAT_CONTEXT[channel_id])} + "```")
+    try:
+        channel_context = json.dumps(context.CHAT_CONTEXT[channel_id])
+    except Exception:
+        channel_context = []
+    say(f"Channel Context: ```{channel_context}```")
+    return
 
 
 # Respond to /reset commands
 @app.command("/reset")
-def reset_context(body, say):
+def reset_context(ack, body, say):
+    ack()
     channel_id = body["channel_id"]
     context.CHAT_CONTEXT[channel_id].clear()
     say("Hmm, I forgot what we were talking about 🤔")
@@ -150,8 +150,9 @@ def reset_context(body, say):
 
 # Catch all (should be last handler)
 @app.event("message")
-def handle_message_events():
-    pass
+def handle_message_events(ack, body):
+    ack()
+    context.handle_events(body)
 
 
 if __name__ == "__main__":

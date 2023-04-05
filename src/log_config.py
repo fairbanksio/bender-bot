@@ -2,7 +2,8 @@ import logging, os, sys
 
 # Create the formatter
 formatter = logging.Formatter(
-    fmt="%(asctime)s %(levelname)-8s %(message)s", datefmt="%Y-%m-%d %H:%M:%S"
+    fmt="%(asctime)s %(levelname)-8s %(filename)s %(message)s",
+    datefmt="%Y-%m-%d %H:%M:%S",
 )
 
 # Create a StreamHandler and add the formatter to it

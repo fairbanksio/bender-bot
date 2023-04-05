@@ -19,14 +19,13 @@ def handle_events(body):
     Remove bot mentions from incoming message, add message to chat context if it's not already there,
     and keep context depth within a specified limit.
     """
-
     try:
         # Log the incoming message
         message_text = body["event"]["text"]
         channel_id = body["event"]["channel"]
-        logger.debug(f"📨 Incoming message: [{channel_id}] {message_text}\n")
+        logger.debug(f"📨 Incoming message: [{channel_id}] {body['event']}\n")
 
-        # Remove any @BOT mentions from the text
+        # Remove any @ mentions from the text
         if re.search("<@[a-zA-Z0-9]+>", message_text):
             message_text = re.sub("<@[a-zA-Z0-9]+>", "", message_text).lstrip()
 
@@ -55,9 +54,10 @@ def handle_events(body):
 
                 # Check mimetype of file
                 mimetype, encoding = mimetypes.guess_type(local_file_path)
-
+                logger.debug(f"Found a file: {mimetype}")
                 # Handle files based on mimetype
                 if "image" in mimetype:
+                    logger.debug("Found an image")
                     try:
                         prompt = interrogate_image(local_file_path)
                         logger.debug(f"🔍 Extracted prompt: {prompt}")
@@ -66,11 +66,7 @@ def handle_events(body):
                         )
                     except Exception as e:
                         logger.error("⛔ Failed to interrogate image: {e}")
-                elif (
-                    "text" in mimetype
-                    or mimetype == "application/json"
-                    or mimetype == "application/pdf"
-                ):
+                elif "text" in mimetype or "json" in mimetype:
                     data = files.open_file(local_file_path)
                     CHAT_CONTEXT[channel_id].append(
                         {"role": "user", "content": f"{data}"}
@@ -88,9 +84,15 @@ def handle_events(body):
             except Exception as e:
                 logger.error(f"⛔ Failed to process file: {e}")
 
-    except Exception:
+    except Exception as e:
         # Log the incoming event
-        logger.debug(f"🖱️ Incoming event: {body['event']}\n")
+        message_text = body["event"]["text"]
+        message_type = body["event"]["type"]
+        channel_id = body["event"]["channel"]
+        logger.debug(
+            f"⚠️ Other message type found: [{channel_id}] {message_type} - {e}\n"
+        )
+
     return
 
 
