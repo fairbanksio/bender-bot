@@ -1,5 +1,22 @@
+version: "3"
 services:
+  watchtower:
+    container_name: watchtower
+    restart: always
+    environment:
+      - WATCHTOWER_CLEANUP=true
+      - WATCHTOWER_LABEL_ENABLE=true
+      - WATCHTOWER_INCLUDE_RESTARTING=true
+    image: containrrr/watchtower
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /etc/timezone:/etc/timezone:ro
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
   bender-bot:
-    build:
-      context: ./
+    container_name: bender-bot
+    restart: always
+    image: jonfairbanks/bender-bot
     env_file: .env
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
