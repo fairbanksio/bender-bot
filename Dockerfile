@@ -7,7 +7,7 @@ RUN pip install pipenv
 
 WORKDIR /app
 COPY ./src/Pipfile* ./
-RUN pipenv lock --requirements > requirements.txt
+RUN pipenv lock && pipenv requirements > requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt --prefix=/install
 
 # Final stage
