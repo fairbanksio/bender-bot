@@ -58,6 +58,9 @@ jobs:
     name: Publish Docker Image
     needs: [black-lint, helm-lint]
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        platform: [linux/amd64, linux/arm64, linux/arm]
     steps:
       - name: Checkout source code
         id: checkout-code
@@ -119,7 +122,7 @@ jobs:
         with:
           builder: ${{ steps.buildx.outputs.name }}
           context: ./
-          platforms: linux/amd64,linux/arm64,linux/arm
+          platforms: ${{ matrix.platform }}
           file: ./Dockerfile
           push: true
           tags: ${{ steps.docker-tags.outputs.tags }}
