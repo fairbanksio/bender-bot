@@ -1,19 +1,25 @@
-FROM python:3.9-alpine as base
+# Build stage
+FROM python:3.9-alpine3.14 as builder
 
 RUN apk update && apk add python3-dev gcc libc-dev
 RUN pip install --upgrade pip
+RUN pip install pipenv
 
-RUN adduser -D worker
-USER worker
-WORKDIR /home/worker
+WORKDIR /app
+COPY ./src/Pipfile* ./
+RUN pipenv lock --requirements > requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt --prefix=/install
 
-ENV PATH="/home/worker/.local/bin:${PATH}"
-RUN pip install --user pipenv
+# Final stage
+FROM python:3.9-alpine3.14
 
-COPY --chown=worker:worker ./src/Pipfile Pipfile
-RUN pipenv lock && pipenv requirements > requirements.txt
-RUN pip install --user -r requirements.txt
+WORKDIR /app
 
-COPY --chown=worker:worker ./src .
+# Copy only the installed packages from the build stage
+COPY --from=builder /install /usr/local
+
+COPY --chown=nobody:nogroup ./src .
+
+USER nobody
 
 CMD ["python", "index.py"]
