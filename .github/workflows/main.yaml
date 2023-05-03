@@ -58,6 +58,9 @@ jobs:
     name: Publish Docker Image
     needs: [black-lint, helm-lint]
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        platform: [linux/amd64, linux/arm64, linux/arm, linux/arm64/v8]
     steps:
       - name: Checkout source code
         id: checkout-code
@@ -94,8 +97,8 @@ jobs:
       - name: Cache Docker layers
         uses: actions/cache@v3
         with:
-          path: /tmp/.buildx-cache
-          key: ${{ runner.os }}-buildx-${{ steps.vars.outputs.sha_short }}
+          path: /tmp/.buildx-cache/${{ runner.os }}-${{ steps.buildx.outputs.name }}-${{ hashFiles('**/Dockerfile') }}
+          key: ${{ runner.os }}-buildx-${{ steps.vars.outputs.sha_short }}-{{ hashFiles('**/Dockerfile') }}
           restore-keys: |
             ${{ runner.os }}-buildx-
           
@@ -119,7 +122,7 @@ jobs:
         with:
           builder: ${{ steps.buildx.outputs.name }}
           context: ./
-          platforms: linux/amd64,linux/arm64,linux/arm
+          platforms: ${{ matrix.platform }}
           file: ./Dockerfile
           push: true
           tags: ${{ steps.docker-tags.outputs.tags }}
