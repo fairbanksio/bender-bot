@@ -70,7 +70,7 @@ jobs:
           DEFAULT_BUMP: "patch"
           INITIAL_VERSION: "1.0.0"
       - name: Log new tag version
-        run: echo "New tag -- {{ steps.bump-tag.outputs.new_tag }} "
+        run: echo "New tag -- {{ steps.bump-tag.outputs.new_tag }}"
 
   release:
     name: Publish Docker Image
@@ -99,7 +99,7 @@ jobs:
           if [[ $CUR_BRANCH = "main" || $CUR_BRANCH = "master" ]]; then
               TAGS="${{ github.repository }}:${{ needs.bump-tag.outputs.version }},${{ github.repository }}:latest"
           fi
-          echo "::set-output name=tags::${TAGS}"
+          echo "tags=${TAGS}" >> $GITHUB_OUTPUT
 
       - name: Cache Docker layers
         uses: actions/cache@v3
