@@ -58,25 +58,25 @@ def handle_events(body):
                 # Handle files based on mimetype
                 if "image" in mimetype:
                     logger.debug("Found an image")
-                    try:
-                        prompt = interrogate_image(local_file_path)
-                        logger.debug(f"🔍 Extracted prompt: {prompt}")
-                        CHAT_CONTEXT[channel_id].append(
-                            {"role": "user", "content": f"{prompt}"}
-                        )
-                    except Exception as e:
-                        logger.error("⛔ Failed to interrogate image: {e}")
-                elif "text" in mimetype or "json" in mimetype:
-                    data = files.open_file(local_file_path)
-                    CHAT_CONTEXT[channel_id].append(
-                        {"role": "user", "content": f"{data}"}
-                    )
-                elif "audio" in mimetype:
-                    logger.debug(f"🎧 {mimetype} found but not yet supported")
-                elif "video" in mimetype:
-                    logger.debug(f"📹 {mimetype} found but not yet supported")
-                else:
-                    logger.warning(f"⚠️ Unsupported filetype: {mimetype}")
+                #     try:
+                #         prompt = interrogate_image(local_file_path)
+                #         logger.debug(f"🔍 Extracted prompt: {prompt}")
+                #         CHAT_CONTEXT[channel_id].append(
+                #             {"role": "user", "content": f"{prompt}"}
+                #         )
+                #     except Exception as e:
+                #         logger.error("⛔ Failed to interrogate image: {e}")
+                # elif "text" in mimetype or "json" in mimetype:
+                #     data = files.open_file(local_file_path)
+                #     CHAT_CONTEXT[channel_id].append(
+                #         {"role": "user", "content": f"{data}"}
+                #     )
+                # elif "audio" in mimetype:
+                #     logger.debug(f"🎧 {mimetype} found but not yet supported")
+                # elif "video" in mimetype:
+                #     logger.debug(f"📹 {mimetype} found but not yet supported")
+                # else:
+                #     logger.warning(f"⚠️ Unsupported filetype: {mimetype}")
 
                 # Delete temp file
                 files.delete_file(local_file_path)
