@@ -88,14 +88,14 @@ jobs:
         id: update-version
         run: |
           # Update Helm chart version
-          sed -r -i "s/(version:[^*]|appVersion:[^*])([[:alnum:].]*.*)/\1${{ jobs.bump-tag.outputs.version }}/g" ./chart/Chart.yaml
+          sed -r -i "s/(version:[^*]|appVersion:[^*])([[:alnum:].]*.*)/\1${{ needs.bump-tag.outputs.version }}/g" ./chart/Chart.yaml
 
       - name: Build Docker Tags
         id: docker-tags
         run: |
           CUR_BRANCH=$(git rev-parse --abbrev-ref HEAD)
           if [[ $CUR_BRANCH = "main" || $CUR_BRANCH = "master" ]]; then
-              TAGS="${{ github.repository }}:${{ jobs.bump-tag.outputs.version }},${{ github.repository }}:latest"
+              TAGS="${{ github.repository }}:${{ needs.bump-tag.outputs.version }},${{ github.repository }}:latest"
           fi
           echo "::set-output name=tags::${TAGS}"
 
