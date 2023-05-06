@@ -59,7 +59,7 @@ jobs:
     needs: [black-lint, helm-lint]
     runs-on: ubuntu-latest
     outputs:
-      version: {{ steps.save-output.outputs.version }}
+      version: ${{ steps.save-output.outputs.version }}
     steps:
       - name: Bump version and push tag
         id: bump-tag
@@ -81,7 +81,7 @@ jobs:
     needs: [black-lint, helm-lint, bump-tag]
     runs-on: ubuntu-latest
     outputs:
-      tags: { steps.docker-tags.outputs.tags }
+      tags: ${{ steps.docker-tags.outputs.tags }}
     strategy:
       matrix:
         platform: [linux/amd64, linux/arm64, linux/arm, linux/arm64/v8]
