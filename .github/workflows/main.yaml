@@ -71,10 +71,10 @@ jobs:
           INITIAL_VERSION: "1.0.0"
       - name: Log new version
         id: log-version
-        run: echo "New version -- {{ steps.bump-tag.outputs.new_tag }}"
+        run: echo "New version -- ${{ steps.bump-tag.outputs.new_tag }}"
       - name: Save version to Output
         id: save-output
-        run: echo "version={{ steps.bump-tag.outputs.new_tag }}" >> $GITHUB_OUTPUT
+        run: echo "version=${{ steps.bump-tag.outputs.new_tag }}" >> $GITHUB_OUTPUT
 
   release:
     name: Publish Docker Image
