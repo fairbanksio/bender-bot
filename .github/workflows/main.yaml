@@ -1,4 +1,4 @@
-name: "Docker Release -- MAIN"
+name: "Docker Release -- LATEST"
 
 on:
   push:
