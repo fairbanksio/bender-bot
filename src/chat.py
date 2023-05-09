@@ -5,7 +5,7 @@ import os
 import context
 from log_config import logger
 
-MODEL = os.getenv("OPENAI_API_MODEL", "gpt-4")  # gpt-3.5-turbo OR gpt-4
+MODEL = os.getenv("OPENAI_API_MODEL", "gpt-3.5-turbo")  # gpt-3.5-turbo OR gpt-4
 PER_TOKEN_COST = 0.0000002
 TIMEOUT = os.getenv("OPENAI_API_TIMEOUT", 90)
 PERSONALITY = os.getenv(
