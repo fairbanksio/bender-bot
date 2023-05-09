@@ -9,6 +9,7 @@ openai = "*"
 black = "*"
 python-dotenv = "*"
 replicate = "*"
+asyncio = "*"
 
 [dev-packages]
 
