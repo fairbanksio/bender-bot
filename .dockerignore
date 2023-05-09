@@ -1,7 +1,6 @@
 .git
 .gitignore
 .gitattributes
-.github/*
 .cache
 *.md
 *.example
@@ -17,3 +16,4 @@ logo.*
 run.sh
 resources/*
 chart/*
+run.sh
