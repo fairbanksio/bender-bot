@@ -11,7 +11,7 @@ from chat import chat_completion
 from log_config import logger
 
 from dotenv import load_dotenv
-from slack_bolt import AsyncApp
+from slack_bolt.app.async_app import AsyncApp
 from slack_bolt.adapter.socket_mode.async_handler import AsyncSocketModeHandler
 
 load_dotenv()
@@ -39,7 +39,7 @@ app = AsyncApp(
 @app.event(event={"type": "message", "subtype": "message_changed"})
 async def handle_change_events(body):
     try:
-        await context.handle_change(body)
+        context.handle_change(body)
     except Exception as e:
         logger.debug(f"⛔ Change failed: {e}")
 
@@ -48,7 +48,7 @@ async def handle_change_events(body):
 @app.event(event={"type": "message", "subtype": "message_deleted"})
 async def handle_delete_events(body):
     try:
-        await context.handle_delete(body)
+        context.handle_delete(body)
     except Exception as e:
         logger.debug(f"⛔ Delete failed: {e}")
 
@@ -69,13 +69,13 @@ async def handle_app_mentions(ack, body, say, client):
         logger.error(f"⛔ Slackmoji failed: {e}")
 
     try:
-        await context.handle_events(body)
+        context.handle_events(body)
     except Exception as e:
         logger.error(f"⛔ Event error: {e} - {body}")
 
     # Make a call to OpenAI
     start_time = time.time()
-    ai_resp = await chat_completion(channel_id)
+    ai_resp = chat_completion(channel_id)
     end_time = time.time()
     elapsed_time = f"{(end_time - start_time):.2f}"
 
@@ -114,7 +114,7 @@ async def generate(ack, say, body):
     await ack()
     prompt = body["text"]
     logger.debug(f"📸 Generate image prompt: {prompt}")
-    image = await generate_image(prompt)
+    image = generate_image(prompt)
     await say(
         text=prompt,
         blocks=[
@@ -154,7 +154,7 @@ async def reset_context(ack, body, say):
 @app.event("message")
 async def handle_message_events(ack, body):
     await ack()
-    await context.handle_events(body)
+    context.handle_events(body)
 
 
 async def main():
