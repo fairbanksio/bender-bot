@@ -1,3 +1,4 @@
+import asyncio
 import json
 import os
 import sys
@@ -10,8 +11,8 @@ from chat import chat_completion
 from log_config import logger
 
 from dotenv import load_dotenv
-from slack_bolt import App
-from slack_bolt.adapter.socket_mode import SocketModeHandler
+from slack_bolt import AsyncApp
+from slack_bolt.adapter.socket_mode.async_handler import AsyncSocketModeHandler
 
 load_dotenv()
 
@@ -28,7 +29,7 @@ else:
     slack_mode = "app_mention"
 
 # Setup Slack app
-app = App(
+app = AsyncApp(
     token=os.environ.get("SLACK_BOT_TOKEN"),
     signing_secret=os.environ.get("SLACK_SIGNING_SECRET"),
 )
@@ -36,48 +37,50 @@ app = App(
 
 # Handle message changes
 @app.event(event={"type": "message", "subtype": "message_changed"})
-def handle_change_events(body):
+async def handle_change_events(body):
     try:
-        context.handle_change(body)
+        await context.handle_change(body)
     except Exception as e:
         logger.debug(f"⛔ Change failed: {e}")
 
 
 # Handle message deletion
 @app.event(event={"type": "message", "subtype": "message_deleted"})
-def handle_delete_events(body):
+async def handle_delete_events(body):
     try:
-        context.handle_delete(body)
+        await context.handle_delete(body)
     except Exception as e:
         logger.debug(f"⛔ Delete failed: {e}")
 
 
 # Handle message events
 @app.event(slack_mode)
-def handle_app_mentions(ack, body, say, client):
-    ack()
+async def handle_app_mentions(ack, body, say, client):
+    await ack()
     # Add an emoji to the incoming requests
     try:
         channel_id = body["event"]["channel"]
         message_ts = body["event"]["ts"]
         message_type = body["event"]["type"]
-        client.reactions_add(channel=channel_id, timestamp=message_ts, name="eyes")
+        await client.reactions_add(
+            channel=channel_id, timestamp=message_ts, name="eyes"
+        )
     except Exception as e:
         logger.error(f"⛔ Slackmoji failed: {e}")
 
     try:
-        context.handle_events(body)
+        await context.handle_events(body)
     except Exception as e:
         logger.error(f"⛔ Event error: {e} - {body}")
 
     # Make a call to OpenAI
     start_time = time.time()
-    ai_resp = chat_completion(channel_id)
+    ai_resp = await chat_completion(channel_id)
     end_time = time.time()
     elapsed_time = f"{(end_time - start_time):.2f}"
 
     # Respond to the user
-    return say(
+    return await say(
         text=ai_resp["text"],
         blocks=[
             {"type": "section", "text": {"type": "mrkdwn", "text": ai_resp["text"]}},
@@ -87,17 +90,16 @@ def handle_app_mentions(ack, body, say, client):
                 "elements": [
                     {
                         "type": "plain_text",
-                        "text": "Complexity: "
-                        + str(ai_resp["usage"])
+                        "text": "Response Time: "
+                        + str(elapsed_time)
+                        + "s || Model: "
+                        + str(ai_resp["model"].upper())
                         + " || Est. Cost: "
                         + str(ai_resp["cost"])
                         + "¢ || Context Depth: "
                         + str(len(context.CHAT_CONTEXT[channel_id]))
-                        + " || Model: "
-                        + str(ai_resp["model"].upper())
-                        + " || Response Time: "
-                        + str(elapsed_time)
-                        + "s",
+                        + " || Complexity: "
+                        + str(ai_resp["usage"]),
                         "emoji": True,
                     }
                 ],
@@ -108,12 +110,12 @@ def handle_app_mentions(ack, body, say, client):
 
 # Respond to /generate commands
 @app.command("/generate")
-def generate(ack, say, body):
-    ack()
+async def generate(ack, say, body):
+    await ack()
     prompt = body["text"]
     logger.debug(f"📸 Generate image prompt: {prompt}")
-    image = generate_image(prompt)
-    say(
+    image = await generate_image(prompt)
+    await say(
         text=prompt,
         blocks=[
             {
@@ -128,38 +130,42 @@ def generate(ack, say, body):
 
 # Respond to /context commands
 @app.command("/context")
-def get_context(ack, body, say):
-    ack()
+async def get_context(ack, body, say):
+    await ack()
     channel_id = body["channel_id"]
     try:
         channel_context = json.dumps(context.CHAT_CONTEXT[channel_id])
     except Exception:
         channel_context = []
-    say(f"Channel Context: ```{channel_context}```")
+    await say(f"Channel Context: ```{channel_context}```")
     return
 
 
 # Respond to /reset commands
 @app.command("/reset")
-def reset_context(ack, body, say):
-    ack()
+async def reset_context(ack, body, say):
+    await ack()
     channel_id = body["channel_id"]
     context.CHAT_CONTEXT[channel_id].clear()
-    say("Hmm, I forgot what we were talking about 🤔")
+    await say("Hmm, I forgot what we were talking about 🤔")
 
 
 # Catch all (should be last handler)
 @app.event("message")
-def handle_message_events(ack, body):
-    ack()
-    context.handle_events(body)
+async def handle_message_events(ack, body):
+    await ack()
+    await context.handle_events(body)
 
 
-if __name__ == "__main__":
+async def main():
     try:
-        with SocketModeHandler(app, os.environ["SLACK_APP_TOKEN"]).start():
-            pass
+        handler = AsyncSocketModeHandler(app, os.environ["SLACK_APP_TOKEN"])
+        await handler.start_async()
     except KeyboardInterrupt:
         sys.exit(130)
     except Exception:
         sys.exit(1)
+
+
+if __name__ == "__main__":
+    asyncio.run(main())
