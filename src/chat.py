@@ -41,26 +41,46 @@ def chat_completion(channel_id):
 
     try:
         logger.debug(f"📞 Calling OpenAI: {request}\n")
-        completion = openai.ChatCompletion.create(
-            model=MODEL, messages=request, request_timeout=TIMEOUT
-        )
-        logger.debug(f"📩 OpenAI Response: {json.dumps(completion)}\n")
-
-        resp = {
-            "usage": completion.usage.total_tokens,
-            "cost": f"{(completion.usage.total_tokens * PER_TOKEN_COST):.7f}",
-            "model": completion.model,
-            "text": str(completion.choices[0].message.content),
-        }
-
-        # Add the returned response to CHAT_CONTEXT
-        context.CHAT_CONTEXT[channel_id].append(
-            {"role": "assistant", "content": resp["text"]}
+        stream = openai.Stream.create(
+            model=MODEL,
+            messages=request,
+            request_timeout=TIMEOUT,
         )
 
-        # Trim CHAT_CONTEXT if necessary
-        if len(context.CHAT_CONTEXT[channel_id]) > context.CONTEXT_DEPTH:
-            context.CHAT_CONTEXT[channel_id].pop(0)
+        # Iterate over the stream until desired completion or timeout
+        while True:
+            if stream.object == "error":
+                logger.error(f"⛔ Error during chat completion: {stream.message}\n")
+                resp = {
+                    "usage": "0",
+                    "cost": "0",
+                    "model": MODEL,
+                    "text": "Kinda busy right now. 🔥 Ask me later.",
+                }
+                break
+
+            if stream.data[0].object == "message":
+                message = stream.data[0]
+                resp = {
+                    "usage": message.usage.total_tokens,
+                    "cost": f"{(message.usage.total_tokens * PER_TOKEN_COST):.7f}",
+                    "model": message.model,
+                    "text": str(message.choices[0].message.content),
+                }
+
+                # Add the returned response to CHAT_CONTEXT
+                context.CHAT_CONTEXT[channel_id].append(
+                    {"role": "assistant", "content": resp["text"]}
+                )
+
+                # Trim CHAT_CONTEXT if necessary
+                if len(context.CHAT_CONTEXT[channel_id]) > context.CONTEXT_DEPTH:
+                    context.CHAT_CONTEXT[channel_id].pop(0)
+
+                if message.choices[0].message.role == "assistant":
+                    break
+
+        logger.debug(f"📩 OpenAI Response: {json.dumps(stream)}\n")
     except Exception as e:
         logger.error(f"⛔ Error during chat completion: {e}\n")
         resp = {

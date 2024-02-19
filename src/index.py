@@ -75,16 +75,37 @@ async def handle_app_mentions(ack, body, say, client):
 
     # Make a call to OpenAI
     start_time = time.time()
-    ai_resp = chat_completion(channel_id)
+    async for ai_resp in chat_completion(channel_id):  # Iterate over the asynchronous generator
+        # Respond to the user with each partial response
+        await say(
+            text=ai_resp["text"],
+            blocks=[
+                {"type": "section", "text": {"type": "mrkdwn", "text": ai_resp["text"]}},
+                {"type": "divider"},
+                {
+                    "type": "context",
+                    "elements": [
+                        {
+                            "type": "plain_text",
+                            "text": "Model: "
+                            + str(ai_resp["model"].upper())
+                            + " || Est. Cost: "
+                            + str(ai_resp["cost"])
+                            + "¢ || Context Depth: "
+                            + str(len(context.CHAT_CONTEXT[channel_id])),
+                            "emoji": True,
+                        }
+                    ],
+                },
+            ],
+        )
+
     end_time = time.time()
     elapsed_time = f"{(end_time - start_time):.2f}"
 
-    # Respond to the user
+    # Final response with completion details
     return await say(
-        text=ai_resp["text"],
         blocks=[
-            {"type": "section", "text": {"type": "mrkdwn", "text": ai_resp["text"]}},
-            {"type": "divider"},
             {
                 "type": "context",
                 "elements": [
@@ -92,20 +113,15 @@ async def handle_app_mentions(ack, body, say, client):
                         "type": "plain_text",
                         "text": "Response Time: "
                         + str(elapsed_time)
-                        + "s || Model: "
-                        + str(ai_resp["model"].upper())
-                        + " || Est. Cost: "
-                        + str(ai_resp["cost"])
-                        + "¢ || Context Depth: "
-                        + str(len(context.CHAT_CONTEXT[channel_id]))
-                        + " || Complexity: "
+                        + "s || Complexity: "
                         + str(ai_resp["usage"]),
                         "emoji": True,
                     }
                 ],
             },
-        ],
+        ]
     )
+
 
 
 # Respond to /generate commands
