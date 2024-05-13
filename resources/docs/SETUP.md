@@ -7,7 +7,9 @@
 	- Create a Slack app from scratch
 		- NEW: Create a new app using a Slack [app manifest](../manifest.yml)
 	- Install the app into your Slack workspace
-- An [OpenAI API key](https://platform.openai.com/account/api-keys) for Chat capabilities
+- An API key for Chat capabilities (If both keys are set, Together.ai will be used as the default)
+	- [Together.ai API key](https://platform.openai.com/account/api-keys) for open-source models (ex: Llama)
+	- [OpenAI API key](https://platform.openai.com/account/api-keys) for ChatGPT models
 - A [Replica API key](https://replicate.com/account) for Image related features
 
 (Note: Python packages `slack` and `slackclient` are no longer supported. Please use `slack_bolt`.)
