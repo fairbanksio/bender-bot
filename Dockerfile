@@ -1,5 +1,5 @@
 # Build stage
-FROM python:3.9-alpine3.14 as builder
+FROM python:3.10-alpine3.14 as builder
 
 RUN apk update && apk add python3-dev gcc libc-dev
 RUN pip install pipenv
@@ -14,7 +14,7 @@ RUN pip install --no-cache-dir -r requirements.txt --prefix=/install
 #
 
 # Final stage
-FROM python:3.9-alpine3.14
+FROM python:3.10-alpine3.14
 
 # Don't generate .pyc files in the container
 ENV PYTHONDONTWRITEBYTECODE=1
