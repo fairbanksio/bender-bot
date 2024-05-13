@@ -27,21 +27,22 @@ TIMEOUT = os.getenv("API_TIMEOUT", 60)
 # Together.ai #
 ###############
 
-if (os.getenv("TOGETHER_API_KEY")):
+if os.getenv("TOGETHER_API_KEY"):
     client = Together(
-        api_key=os.environ.get("TOGETHER_API_KEY"),
-        timeout=TIMEOUT,
-        max_retries=2
+        api_key=os.environ.get("TOGETHER_API_KEY"), timeout=TIMEOUT, max_retries=2
     )
-    MODEL = os.getenv("TOGETHER_API_MODEL", "meta-llama/Llama-3-8b-chat-hf") # https://docs.together.ai/docs/inference-models
+    MODEL = os.getenv(
+        "TOGETHER_API_MODEL", "meta-llama/Llama-3-8b-chat-hf"
+    )  # https://docs.together.ai/docs/inference-models
 
 ##################
 # OpenAI ChatGPT #
 ##################
 
-elif (os.getenv("OPENAI_API_KEY")):
+elif os.getenv("OPENAI_API_KEY"):
     openai.api_key = os.getenv("OPENAI_API_KEY")
     MODEL = os.getenv("OPENAI_API_MODEL", "gpt-3.5-turbo")  # gpt-3.5-turbo, gpt-4, etc.
+
 
 def openai_chat_completion(channel_id):
     """
@@ -89,6 +90,7 @@ def openai_chat_completion(channel_id):
 
     return resp
 
+
 def together_chat_completion(channel_id):
     """
     Sends a chat prompt to Together.ai's Chat API to generate a response.
@@ -110,9 +112,9 @@ def together_chat_completion(channel_id):
         completion = client.chat.completions.create(
             model=MODEL,
             messages=request,
-            max_tokens=2000 # Limit the token response to 2k tokens, Slack can only accept 3k characters per message
+            max_tokens=2000,  # Limit the token response to 2k tokens, Slack can only accept 3k characters per message
         )
-        
+
         logger.debug(f"📩 Together.ai Response: {completion.model_dump_json()}\n")
 
         resp = {

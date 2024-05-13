@@ -76,9 +76,9 @@ async def handle_app_mentions(ack, body, say, client):
 
     # Make a call to Together/OpenAI
     start_time = time.time()
-    if (os.getenv("TOGETHER_API_KEY")):
+    if os.getenv("TOGETHER_API_KEY"):
         ai_resp = together_chat_completion(channel_id)
-    elif (os.getenv("OPENAI_API_KEY")):
+    elif os.getenv("OPENAI_API_KEY"):
         ai_resp = openai_chat_completion(channel_id)
     end_time = time.time()
     elapsed_time = f"{(end_time - start_time):.2f}"
