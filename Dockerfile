@@ -31,6 +31,10 @@ COPY --chown=nobody:nogroup ./src .
 # Force install certifi
 RUN pip install certifi
 
+# Force install filelock
+RUN pip install filelock
+RUN pip install --user filelock
+
 USER nobody
 
 CMD ["python", "index.py"]
