@@ -7,7 +7,8 @@ import time
 import context
 
 from images import generate_image
-from chat import chat_completion
+from chat import openai_chat_completion
+from chat import together_chat_completion
 from log_config import logger
 
 from dotenv import load_dotenv
@@ -73,9 +74,12 @@ async def handle_app_mentions(ack, body, say, client):
     except Exception as e:
         logger.error(f"⛔ Event error: {e} - {body}")
 
-    # Make a call to OpenAI
+    # Make a call to Together/OpenAI
     start_time = time.time()
-    ai_resp = chat_completion(channel_id)
+    if os.getenv("TOGETHER_API_KEY"):
+        ai_resp = together_chat_completion(channel_id)
+    elif os.getenv("OPENAI_API_KEY"):
+        ai_resp = openai_chat_completion(channel_id)
     end_time = time.time()
     elapsed_time = f"{(end_time - start_time):.2f}"
 
@@ -94,9 +98,7 @@ async def handle_app_mentions(ack, body, say, client):
                         + str(elapsed_time)
                         + "s || Model: "
                         + str(ai_resp["model"].upper())
-                        + " || Est. Cost: "
-                        + str(ai_resp["cost"])
-                        + "¢ || Context Depth: "
+                        + " || Context Depth: "
                         + str(len(context.CHAT_CONTEXT[channel_id]))
                         + " || Complexity: "
                         + str(ai_resp["usage"]),

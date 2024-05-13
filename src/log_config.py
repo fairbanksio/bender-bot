@@ -1,5 +1,9 @@
 import logging, os, sys
 
+from dotenv import load_dotenv
+
+load_dotenv()
+
 # Create the formatter
 formatter = logging.Formatter(
     fmt="%(asctime)s %(levelname)-8s %(filename)s %(message)s",
@@ -13,4 +17,4 @@ handler.setFormatter(formatter)
 # Configure your logger
 logger = logging.getLogger(__name__)
 logger.addHandler(handler)
-logger.setLevel(logging.DEBUG if os.environ.get("DEBUG") else logging.INFO)
+logger.setLevel(logging.DEBUG if os.getenv("DEBUG") else logging.INFO)

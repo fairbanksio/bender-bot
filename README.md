@@ -6,7 +6,7 @@
 
 A Python based Slack bot with AI based features
 
-### Chat Completion via ChatGPT
+### Chat Completion via Together.ai / ChatGPT
 ```
 @Bender what is the deepest body of water in North America? 
 ```
