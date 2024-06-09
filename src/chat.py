@@ -112,7 +112,7 @@ def together_chat_completion(channel_id):
         completion = client.chat.completions.create(
             model=MODEL,
             messages=request,
-            max_tokens=2000,  # Limit the token response to 2k tokens, Slack can only accept 3k characters per message
+            max_tokens=1024,  # Limit the token response to 2k tokens, Slack can only accept 3k characters per message
         )
 
         logger.debug(f"📩 Together.ai Response: {completion.model_dump_json()}\n")
